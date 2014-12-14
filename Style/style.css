@@ -1,0 +1,4 @@
+* { padding: 0; margin: 0; border: 0; }
+body { margin: auto; width: 1024px; background-color: cadetblue; }
+canvas { background: #000; margin-right: auto; margin-left: auto; display: block; margin-top: 10%; }
+#gameOverUI { color: aliceblue; }
