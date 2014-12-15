@@ -32,5 +32,9 @@ var Physics = {
 
         for(var i = 2; i < object.length; i++)
             object[i].moveTo(object[i - 1].prevX, object[i - 1].prevY);
+    },
+    checkCollision: function(obj1, obj2){
+        return !(obj1.x + obj1.width < obj2.x || obj2.x + obj2.width < obj1.x ||
+        obj1.y + obj1.height < obj2.y || obj2.y + obj2.height < obj1.y);
     }
 };

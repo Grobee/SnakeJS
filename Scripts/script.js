@@ -10,23 +10,37 @@ $(document).ready(function(){
     /* snake and the others */
     var gameOverUI = $('#gameOverUI');
     /* create the initial snake */
-    const snakeDim = 15;
-    /* populate the keys array */
-    for(var i = 37; i <= 40; i++)
-        Game.keys[i] = false;
-
+    const snakeSize = 16;
+    const tileSize = 16;
     var snake = [];
-    snake.push(new Snake(canvas.width() / 2, canvas.height() / 2, snakeDim, snakeDim));
-
-    for(var i = 1; i < 17; i++)
-        snake.push(new Snake(snake[i - 1].x , snake[i - 1].y + snakeDim, snakeDim, snakeDim));
-
-    /* init */
-    gameOverUI.hide();
+    var food;
 
     $(document).keydown(function(event){
         Game.keys[event.keyCode] = true;
     });
+
+    /* init */
+    var init = function(){
+        /* populate the keys array */
+        for(var i = 37; i <= 40; i++)
+            Game.keys[i] = false;
+
+        /* map init */
+        Map.init(tileSize);
+
+        /* snake functions and initialization */
+        snake[0] = new Snake(Map.tiles[Math.floor(Map.rows / 2)][Math.floor(Map.columns / 2)].x, Map.tiles[Math.floor(Map.rows / 2)][Math.floor(Map.columns / 2)].y, snakeSize, snakeSize);
+
+        for(var i = 1; i < 3; i++)
+            snake.push(new Snake(snake[i - 1].x , snake[i - 1].y + snakeSize, snakeSize, snakeSize));
+
+        /* food */
+        food = new Food(tileSize, tileSize);
+        food.spawn();
+
+        /* show / hide UI elements */
+        gameOverUI.hide();
+    };
 
     /* animation */
     var gameLoop = setInterval(animate, 40);
@@ -42,6 +56,12 @@ $(document).ready(function(){
 
     function update(){
         Game.checkKeys(snake);
+
+        snakeUpdate();
+        foodUpdate();
+    }
+
+    function snakeUpdate(){
         snake[0].move();
 
         if(Physics.checkIfOutOfBounds(snake)){
@@ -55,11 +75,25 @@ $(document).ready(function(){
             snake[i].moveTo(snake[i - 1].prevX, snake[i - 1].prevY);
     }
 
-    function draw(){
-        context.fillStyle = 'rgb(255,255,255)';
+    function foodUpdate(){
+        if(Physics.checkCollision(snake[0], food)){
+            food.spawn();
+            snake.push(new Snake(snake[snake.length - 1].prevX, snake[snake.length - 1].prevY, snakeSize, snakeSize));
+            Game.score++;
+            console.log(snake[0].x + " : " + snake[0].y);
+        }
+    }
 
+    function draw(){
         /* draw out the snake */
+        context.fillStyle = 'rgb(255, 255, 255)';
         for(var i = 0; i < snake.length; i++)
             context.fillRect(snake[i].x, snake[i].y, snake[i].width, snake[i].height);
+
+        /* draw out the food */
+        context.fillStyle = 'rgb(255, 163 ,8)';
+        context.fillRect(food.x, food.y, food.width, food.height);
     }
+
+    init();
 });

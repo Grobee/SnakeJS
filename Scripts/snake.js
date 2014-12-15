@@ -1,5 +1,5 @@
 function Snake(x, y, width, height){
-    var speed = 15;
+    var speed = 16;
     this.direction = Direction.UP;
 
     this.x = x;
