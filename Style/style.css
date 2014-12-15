@@ -1,4 +1,5 @@
 * { padding: 0; margin: 0; border: 0; }
+@font-face { font-family: 'Arcade Classic'; src: url('../Fonts/ARCADECLASSIC.TTF') format('truetype'); }
 body { margin: auto; width: 1024px; background-color: cadetblue; }
-canvas { background: #000; margin-right: auto; margin-left: auto; display: block; margin-top: 10%; }
-#gameOverUI { color: aliceblue; }
+canvas { position: relative; background: #000; margin-right: auto; margin-left: auto; display: block; margin-top: 10px; }
+#gameOverUI { position: absolute; bottom: 45%; left: 44%; color: aliceblue; font-size: 48px; font-family: 'Arcade Classic'; }

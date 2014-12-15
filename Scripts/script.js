@@ -11,26 +11,25 @@ $(document).ready(function(){
     var gameOverUI = $('#gameOverUI');
     /* create the initial snake */
     const snakeDim = 15;
+    /* populate the keys array */
+    for(var i = 37; i <= 40; i++)
+        Game.keys[i] = false;
 
     var snake = [];
     snake.push(new Snake(canvas.width() / 2, canvas.height() / 2, snakeDim, snakeDim));
 
-    for(var i = 1; i < 17; i++){
+    for(var i = 1; i < 17; i++)
         snake.push(new Snake(snake[i - 1].x , snake[i - 1].y + snakeDim, snakeDim, snakeDim));
-    }
 
     /* init */
     gameOverUI.hide();
 
     $(document).keydown(function(event){
-        if(event.keyCode == 37 && snake[0].direction != Direction.RIGHT) snake[0].direction = Direction.LEFT;
-        if(event.keyCode == 38 && snake[0].direction != Direction.DOWN) snake[0].direction = Direction.UP;
-        if(event.keyCode == 39 && snake[0].direction != Direction.LEFT) snake[0].direction = Direction.RIGHT;
-        if(event.keyCode == 40 && snake[0].direction != Direction.UP) snake[0].direction = Direction.DOWN;
+        Game.keys[event.keyCode] = true;
     });
 
     /* animation */
-    var gameLoop = setInterval(animate, 30);
+    var gameLoop = setInterval(animate, 40);
 
     function animate(){
         context.clearRect(0, 0, canvas.width(), canvas.height());
@@ -42,12 +41,13 @@ $(document).ready(function(){
     }
 
     function update(){
+        Game.checkKeys(snake);
         snake[0].move();
 
         if(Physics.checkIfOutOfBounds(snake)){
             gameOverUI.show();
             Game.inProgress = false;
-            Physics.killSnake(snake);
+            //Physics.killSnake(snake);
             return;
         }
 
