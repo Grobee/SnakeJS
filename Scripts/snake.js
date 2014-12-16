@@ -1,34 +1,33 @@
-function Snake(x, y, width, height){
-    var speed = 16;
-    this.direction = Direction.UP;
+function Snake(tileSize){
+    this.parts = [];
 
-    this.x = x;
-    this.y = y;
+    this.head = null;
+    this.tail = null;
 
-    this.prevX = null;
-    this.prevY = null;
-
-    this.width = width;
-    this.height = height;
-
-    this.velocityX = speed;
-    this.velocityY = speed;
+    this.width = tileSize;
+    this.height = tileSize;
 
     this.move = function(){
-        this.prevX = this.x;
-        this.prevY = this.y;
+        var newCoords = { x: this.parts[0].x, y: this.parts[0].y};
 
-        if(this.direction == Direction.UP) this.y -= this.velocityY;
-        if(this.direction == Direction.DOWN) this.y += this.velocityY;
-        if(this.direction == Direction.LEFT) this.x -= this.velocityX;
-        if(this.direction == Direction.RIGHT) this.x += this.velocityX;
+        if(Game.direction == Direction.UP) newCoords.y--;
+        if(Game.direction == Direction.DOWN) newCoords.y++;
+        if(Game.direction == Direction.LEFT) newCoords.x--;
+        if(Game.direction == Direction.RIGHT) newCoords.x++;
+
+        this.parts.unshift({x: newCoords.x, y: newCoords.y});
+        this.head = this.parts[0];
     };
 
-    this.moveTo = function(x, y){
-        this.prevX = this.x;
-        this.prevY = this.y;
+    this.add = function(x, y){
+        this.parts.unshift({x: x, y: y});
+        this.head = this.parts[0];
+        this.tail = this.parts[this.parts.length - 1];
+    };
 
-        this.x = x;
-        this.y = y;
+    this.removeLast = function(){
+        Map.set(Type.EMPTY, this.tail.x, this.tail.y);
+        this.parts.pop();
+        this.tail = this.parts[this.parts.length - 1];
     };
 }

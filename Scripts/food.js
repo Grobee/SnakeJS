@@ -1,15 +1,14 @@
 var Food = function(width, height){
-    this.x = null;
-    this.y = null;
+    this.x = 0;
+    this.y = 0;
 
     this.width = width;
     this.height = height;
 
     this.spawn = function(){
-        var randomRow = Math.floor(Math.random() * Map.rows);
-        var randomCol = Math.floor(Math.random() * Map.columns);
-
-        this.x = Map.tiles[randomRow][randomCol].x;
-        this.y = Map.tiles[randomRow][randomCol].y;
+        do{
+            this.x = Math.floor(Math.random() * (Map.rows - 1));
+            this.y = Math.floor(Math.random() * (Map.columns - 1));
+        }while(Map.tiles[this.x][this.y] == Type.SNAKE);
     };
 };

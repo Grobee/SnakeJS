@@ -1,26 +1,25 @@
 var Map = {
-    tileSize: null,
-    rows: null,
-    columns: null,
+    rows: 0,
+    columns: 0,
     tiles: [],
+    tileSize: 0,
+
     init: function(tileSize){
         this.tileSize = tileSize;
 
-        this.rows = Game.canvas.height / this.tileSize;
-        this.columns = Game.canvas.width / this.tileSize;
-        var coords = { x: 0, y: 0 };
+        this.rows = Math.floor(Game.width / tileSize);
+        this.columns = Math.floor(Game.height / tileSize);
 
+        /* initialize the tiles 2d array to empty */
         for(var i = 0; i < this.rows; i++){
-            coords.x = 0;
             this.tiles[i] = [];
-
-            for(var j = 0; j < this.columns; j++){
-                this.tiles[i][j] = { x: coords.x, y: coords.y };
-                coords.x += this.tileSize;
-            }
-            coords.y += this.tileSize;
+            for(var j = 0; j < this.columns; j++)
+                this.tiles[i][j] = Type.EMPTY;
         }
+    },
 
-        console.log(this.tiles);
-    }
+    /* x and y are the indices of the 2d array tiles
+    * getters and setters */
+    set: function(type, x, y){ this.tiles[x][y] = type; },
+    get: function(x, y){ return this.tiles[x][y]; }
 };
