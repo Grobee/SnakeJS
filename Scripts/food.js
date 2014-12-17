@@ -1,9 +1,8 @@
-var Food = function(width, height){
+var Food = function(tileSize){
     this.x = 0;
     this.y = 0;
 
-    this.width = width;
-    this.height = height;
+    this.tileSize = tileSize;
 
     this.spawn = function(){
         do{

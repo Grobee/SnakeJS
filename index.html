@@ -14,13 +14,20 @@
     <script type="text/javascript" src="Scripts/game.js"></script>
 </head>
 <body>
-    <div id="gameUI">
-        <canvas width="800" height="640"></canvas>
-        <div id="gameOverUI">WASTED</div>
+    <div id="gameUI" width="640" height="512">
+        <canvas id="mainCanvas"></canvas>
+        <div id="gameOverUI">
+            <div id="gameOverTextUI">WASTED</div>
+            <div id="gameRestartUI">Restart</div>
+        </div>
+
+        <div id="gameScoreUI">SCORE: 0</div>
 
         <div id="menuUI">
-            <div id="playUI">Play</div>
-            <div id="optionsUI">Credits</div>
+            <div id="menuUIButtons">
+                <div id="playUI">Play</div>
+                <div id="creditsUI">Credits</div>
+            </div>
         </div>
     </div>
 </body>

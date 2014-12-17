@@ -10,6 +10,26 @@ var Game = {
     keys: [],
     direction: Direction.UP,
 
+    init: function(canvas, context){
+        /* game canvas*/
+        this.canvas = canvas;
+        this.context = context;
+        this.width = canvas.width();
+        this.height = canvas.height();
+        /* game attributes */
+        this.direction = Direction.UP;
+        this.inProgress = true;
+        this.score = 0;
+        /* populate the keys array */
+        for(var i = 37; i <= 40; i++)
+            Game.keys[i] = false;
+    },
+
+    setDimensions: function(width, height){
+        this.width = width;
+        this.height = height;
+    },
+
     checkKeys: function(){
         var keyCount = 0;
 
