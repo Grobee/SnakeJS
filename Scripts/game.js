@@ -7,6 +7,7 @@ var Game = {
 
     score: 0,
     inProgress: false,
+    difficulty: Difficulty.EASY,
     keys: [],
     direction: Direction.UP,
 
@@ -51,5 +52,25 @@ var Game = {
         /* initialize to default */
         for(var i = 37; i <= 40; i++)
             this.keys[i] = false;
+    },
+
+    drawWalls: function(){
+        var offset = 10;
+
+        /* generate Y */
+        var index = { x: Map.rows / 2, y: (Map.columns / 2) - offset};
+        for(var i = 0; i < 21; i++){
+            Map.set(Type.WALL, index.x, index.y);
+            Map.set(Type.WALL, index.x - 1, index.y);
+            index.y++;
+        }
+
+        /* generate X */
+        index = { x: (Map.rows / 2) - offset, y: Map.columns / 2};
+        for(var i = 0; i < 20; i++){
+            Map.set(Type.WALL, index.x, index.y);
+            Map.set(Type.WALL, index.x, index.y + 1);
+            index.x++;
+        }
     }
 };

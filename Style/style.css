@@ -1,18 +1,28 @@
 * { margin: auto; padding: 0; border: 0; }
 @font-face { font-family: 'Arcade Classic'; src: url('../Fonts/ARCADECLASSIC.TTF') format('truetype'); }
-body { margin: auto; width: 1024px; background-color: cadetblue; }
+body { margin: 7% auto 0 auto; width: 1024px; background-color: cadetblue; }
 /* the main container */
-#gameUI { position: absolute; left: 26%; top: 5%; display: block; }
+#gameUI { position: relative; left: 2%; display: block; width: 640px; height: 512px; }
 /*  my canvas */
-#myCanvas { position: absolute; background: #000; display: block; margin: 10px auto 0 auto; }
+#mainCanvas { position: absolute; background: #000; display: block; margin: 10px auto 0 auto; }
 /* the menu UI */
 #menuUI { position: absolute; font-size: 36px; background: #000; width: 640px; height: 512px; display: block; font-family: "Arcade Classic", sans-serif; color: #fff; }
 #menuUIButtons { position: inherit; top: 40%; width: 100%; text-align: center; }
 #playUI { font-variant: small-caps; cursor: pointer; }
 #creditsUI { font-variant: small-caps; cursor: pointer; }
 /* game score UI */
-#gameScoreUI { position: absolute; display: block; font-family: "Arcade Classic", sans-serif; color: #fff; font-size: 24px; }
+#gameScoreUI { position: absolute; top: 103%; display: block; font-family: "Arcade Classic", sans-serif; color: #fff; font-size: 24px; }
 /* game over UI*/
 #gameOverUI { position: absolute; bottom: 45%; text-align: center; width: 100%; display: block; font-family: "Arcade Classic", sans-serif; color: #fff; }
-#gameRestartUI { display: block; font-size: 36px; cursor: pointer; font-variant: small-caps; }
 #gameOverTextUI { display: block; font-size: 48px; }
+#gameRestartUI { display: block; font-size: 36px; cursor: pointer; font-variant: small-caps; }
+#goToMenuUI { display: block; font-size: 36px; cursor: pointer; font-variant: small-caps; }
+/* choose game difficulty / map */
+#choose_diff_id { position: absolute; color: white; width: 100%; height: 100%; background: #000; }
+#choose_diff_id:after { clear: both; }
+.difficulty {  padding: 5px; margin-top: 15%; float: left; width: 48%; display: block; }
+.difficulty img { margin-left: 26%; }
+.difficulty p { text-align: justify; width: 10em; margin-top: 3%; margin-left: 21%; font-family: "Arcade Classic", sans-serif }
+button { margin-left: 31%; padding: 5px; font-family: "Arcade Classic", sans-serif; cursor: pointer; }
+#easy_btn { margin-top: 29%; }
+#hard_btn { margin-top: 40%; }

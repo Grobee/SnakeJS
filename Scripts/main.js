@@ -15,28 +15,40 @@ $(document).ready(function(){
     /* game over */
     var gameOverUI = $('#gameOverUI');
     var gameRestartUI = $('#gameRestartUI');
+    var goToMenuUI = $("#goToMenuUI");
     /* menu */
     var menuUI = $('#menuUI');
     var playUI = $('#playUI');
     var creditsUI = $('#creditsUI');
+    /* choose game difficulty */
+    var gameDiffUI = $('#choose_diff_id');
+    var easyDiffBtnUI = $('#easy_btn');
+    var hardDiffBtnUI = $('#hard_btn');
 
-    $(document).keydown(function(event){
-        Game.keys[event.keyCode] = true;
-    });
+    $(document).keydown(function(event){ Game.keys[event.keyCode] = true; });
 
     gameRestartUI.click(function(){
-        init();
+        if(Game.difficulty == Difficulty.EASY) initEasy();
+        if(Game.difficulty == Difficulty.HARD) initHard();
     });
 
-    playUI.click(function(){
-       init();
-    });
+    playUI.click(function(){ chooseMap(); });
+
+    easyDiffBtnUI.click(function(){ initEasy(); });
+    hardDiffBtnUI.click(function(){ initHard(); });
+    goToMenuUI.click(function() { setDefault(); });
+
+    var chooseMap = function(){
+        gameDiffUI.show();
+        menuUI.hide();
+    };
 
     var setDefault = function(){
         /* default visibility */
         canvas.hide();
         gameScoreUI.hide();
         gameOverUI.hide();
+        gameDiffUI.hide();
         menuUI.show();
         /* default values */
         canvas.attr('width', width);
@@ -53,15 +65,18 @@ $(document).ready(function(){
         gameRestartUI.show();
     };
 
-    var init = function(){
-        /* game init */
-        Map.init(tileSize);
+    var initEasy = function(){
+        gameDiffUI.hide();
+        /* game initEasy */
         Game.init(canvas, canvas.get(0).getContext('2d'));
+        Game.difficulty = Difficulty.EASY;
 
         /* game objects
         * snake */
         snake = [];
         snake = new Snake(tileSize);
+
+        Map.init(tileSize);
 
         var index = { x: Math.floor(Map.rows /2), y: Math.floor(Map.columns / 2) };
         for(var i = 0; i < 3; i++) {
@@ -80,7 +95,44 @@ $(document).ready(function(){
         gameScoreUI.html("Score: 0");
         gameScoreUI.show();
         menuUI.hide();
-        gameLoop = setTimeout(animate, 33);
+        gameLoop = setTimeout(animate, 50);
+    };
+
+    var initHard = function(){
+        gameDiffUI.hide();
+        /* game initEasy */
+        Game.init(canvas, canvas.get(0).getContext('2d'));
+        Game.difficulty = Difficulty.HARD;
+
+        /* game objects
+         * snake */
+        snake = [];
+        snake = new Snake(tileSize);
+
+        Map.init(tileSize);
+
+        /* init snake */
+        var index = { x: Math.floor(Map.rows - 3), y: Math.floor(Map.columns - 3) };
+        for(var i = 0; i < 3; i++) {
+            snake.add(index.x, index.y - i);
+            Map.set(Type.SNAKE, index.x, index.y - i);
+        }
+
+        /* init walls */
+        Game.drawWalls();
+
+        /* food */
+        food = new Food(tileSize);
+        food.spawn();
+        Map.set(Type.FOOD, food.x, food.y);
+
+        /* UI */
+        hideGameOverUI();
+        canvas.show();
+        gameScoreUI.html("Score: 0");
+        gameScoreUI.show();
+        menuUI.hide();
+        gameLoop = setTimeout(animate, 50);
     };
 
     var animate = function(){
@@ -89,7 +141,7 @@ $(document).ready(function(){
         update();
         draw();
 
-        if(Game.inProgress) setTimeout(animate, 33);
+        if(Game.inProgress) setTimeout(animate, 50);
     };
 
     var update = function(){
@@ -105,15 +157,14 @@ $(document).ready(function(){
         snake.move();
 
         if(Physics.checkIfOutOfBounds(snake.head)
-            || Physics.checkCollisionWithSnake(snake.head)){
+            || Physics.checkCollision(snake.head)){
             /* inside */
             Game.inProgress = false;
             clearTimeout(gameLoop);
             /* outside */
             showGameOverUI();
         }
-
-        Map.set(Type.SNAKE, snake.head.x, snake.head.y);
+        else { Map.set(Type.SNAKE, snake.head.x, snake.head.y); }
     };
 
     /* update the food object's position */
@@ -148,6 +199,11 @@ $(document).ready(function(){
 
                     case Type.FOOD:
                         Game.context.fillStyle = 'rgb(128,128,0)';
+                        Game.context.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
+                        break;
+
+                    case Type.WALL:
+                        Game.context.fillStyle = 'rgb(192,0,0)';
                         Game.context.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
                         break;
                 }

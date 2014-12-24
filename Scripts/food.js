@@ -8,6 +8,6 @@ var Food = function(tileSize){
         do{
             this.x = Math.floor(Math.random() * (Map.rows - 1));
             this.y = Math.floor(Math.random() * (Map.columns - 1));
-        }while(Map.tiles[this.x][this.y] == Type.SNAKE);
+        }while(Map.tiles[this.x][this.y] == Type.SNAKE || Map.tiles[this.x][this.y] == Type.WALL);
     };
 };
