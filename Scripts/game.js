@@ -58,7 +58,7 @@ var Game = {
         var offset = 10;
 
         /* generate Y */
-        var index = { x: Map.rows / 2, y: (Map.columns / 2) - offset};
+        var index = { x: Math.floor(Map.rows / 2), y: Math.floor((Map.columns / 2)) - offset};
         for(var i = 0; i < 21; i++){
             Map.set(Type.WALL, index.x, index.y);
             Map.set(Type.WALL, index.x - 1, index.y);
@@ -66,7 +66,7 @@ var Game = {
         }
 
         /* generate X */
-        index = { x: (Map.rows / 2) - offset, y: Map.columns / 2};
+        index = { x: Math.floor((Map.rows / 2)) - offset, y: Math.floor(Map.columns / 2) };
         for(var i = 0; i < 20; i++){
             Map.set(Type.WALL, index.x, index.y);
             Map.set(Type.WALL, index.x, index.y + 1);

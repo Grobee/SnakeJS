@@ -2,9 +2,10 @@ $(document).ready(function(){
     /* initialize the game / game loop */
     var gameLoop;
     var canvas = $('#mainCanvas');
-    const tileSize = 16;
-    const width = 640;
-    const height = 512;
+    const fps = 65;
+    const tileSize = 24;
+    const width = 672;
+    const height = 672;
     /* game objects */
     var snake;
     var food;
@@ -95,7 +96,7 @@ $(document).ready(function(){
         gameScoreUI.html("Score: 0");
         gameScoreUI.show();
         menuUI.hide();
-        gameLoop = setTimeout(animate, 50);
+        gameLoop = setTimeout(animate, fps);
     };
 
     var initHard = function(){
@@ -132,7 +133,7 @@ $(document).ready(function(){
         gameScoreUI.html("Score: 0");
         gameScoreUI.show();
         menuUI.hide();
-        gameLoop = setTimeout(animate, 50);
+        gameLoop = setTimeout(animate, fps);
     };
 
     var animate = function(){
@@ -141,7 +142,7 @@ $(document).ready(function(){
         update();
         draw();
 
-        if(Game.inProgress) setTimeout(animate, 50);
+        if(Game.inProgress) setTimeout(animate, fps);
     };
 
     var update = function(){
@@ -188,22 +189,25 @@ $(document).ready(function(){
                  * image to the given position */
                  switch(Map.get(i, j)){
                     case Type.EMPTY:
-                        Game.context.fillStyle = 'rgb(0,64,128)';
+                        Game.context.fillStyle = '#3C798C';
                         Game.context.fillRect(i* tileSize, j * tileSize, tileSize, tileSize);
+
                         break;
 
                     case Type.SNAKE:
-                        Game.context.fillStyle = 'rgb(255,255,255)';
+                        if(i == snake.head.x && j == snake.head.y) Game.context.fillStyle = '#8C5E2E';
+                        else Game.context.fillStyle = '#402B15';
+
                         Game.context.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
                         break;
 
                     case Type.FOOD:
-                        Game.context.fillStyle = 'rgb(128,128,0)';
+                        Game.context.fillStyle = '#8C5012';
                         Game.context.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
                         break;
 
                     case Type.WALL:
-                        Game.context.fillStyle = 'rgb(192,0,0)';
+                        Game.context.fillStyle = '#153640';
                         Game.context.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
                         break;
                 }
