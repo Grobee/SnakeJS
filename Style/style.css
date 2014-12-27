@@ -6,21 +6,19 @@ body { margin: 1% auto 0 auto; width: 1024px; background-color: cadetblue; }
 /*  my canvas */
 #mainCanvas { position: absolute; background: #000; display: block; margin: 10px auto 0 auto; }
 /* the menu UI */
-#menuUI { position: absolute; font-size: 36px; background: #000; width: 100%; height: 100%; display: block; font-family: "Arcade Classic", sans-serif; color: #fff; }
-#menuUIButtons { position: inherit; top: 40%; width: 100%; text-align: center; }
-#playUI { font-variant: small-caps; cursor: pointer; }
-#creditsUI { font-variant: small-caps; cursor: pointer; }
+#menuUI { position: absolute; font-size: 36px; width: 100%; height: 100%; display: block; font-family: "Arcade Classic", sans-serif; color: #fff; background: url('../Images/menu_bg.png') no-repeat; }
+#menuUIButtons { position: inherit; top: 40%; width: 100%; text-align: center; font-variant: small-caps; cursor: pointer; }
 /* game score UI */
 #gameScoreUI { position: absolute; top: 103%; display: block; font-family: "Arcade Classic", sans-serif; color: #fff; font-size: 24px; }
 /* game over UI*/
-#gameOverUI { position: absolute; bottom: 45%; text-align: center; width: 100%; display: block; font-family: "Arcade Classic", sans-serif; color: #fff; }
+#gameOverUI { position: absolute; bottom: 45%; text-align: center; width: 100%; display: block; font-family: "Arcade Classic", sans-serif; background-color: #000; opacity: 0.8; color: #fff; padding: 5px 0 5px 0; }
 #gameOverTextUI { display: block; font-size: 48px; }
 #gameRestartUI { display: block; font-size: 36px; cursor: pointer; font-variant: small-caps; }
 #goToMenuUI { display: block; font-size: 36px; cursor: pointer; font-variant: small-caps; }
 /* choose game difficulty / map */
-#choose_diff_id { position: absolute; color: white; width: 100%; height: 100%; background: #000; }
+#choose_diff_id { position: absolute; color: white; width: 100%; height: 100%; background: #000; background: url('../Images/menu_bg.png') no-repeat; }
 #choose_diff_id:after { clear: both; }
-.difficulty {  padding: 5px; margin-top: 15%; float: left; width: 48%; display: block; }
+.difficulty {  padding: 5px; margin-top: 35%; float: left; width: 48%; display: block; }
 .difficulty img { margin-left: 29%; }
 .difficulty p { text-align: justify; width: 10em; margin-top: 3%; margin-left: 24%; font-family: "Arcade Classic", sans-serif }
 button { margin-left: 35%; padding: 5px; font-family: "Arcade Classic", sans-serif; cursor: pointer; }

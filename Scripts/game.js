@@ -26,11 +26,6 @@ var Game = {
             Game.keys[i] = false;
     },
 
-    setDimensions: function(width, height){
-        this.width = width;
-        this.height = height;
-    },
-
     checkKeys: function(){
         var keyCount = 0;
 
@@ -52,25 +47,5 @@ var Game = {
         /* initialize to default */
         for(var i = 37; i <= 40; i++)
             this.keys[i] = false;
-    },
-
-    drawWalls: function(){
-        var offset = 10;
-
-        /* generate Y */
-        var index = { x: Math.floor(Map.rows / 2), y: Math.floor((Map.columns / 2)) - offset};
-        for(var i = 0; i < 21; i++){
-            Map.set(Type.WALL, index.x, index.y);
-            Map.set(Type.WALL, index.x - 1, index.y);
-            index.y++;
-        }
-
-        /* generate X */
-        index = { x: Math.floor((Map.rows / 2)) - offset, y: Math.floor(Map.columns / 2) };
-        for(var i = 0; i < 20; i++){
-            Map.set(Type.WALL, index.x, index.y);
-            Map.set(Type.WALL, index.x, index.y + 1);
-            index.x++;
-        }
     }
 };

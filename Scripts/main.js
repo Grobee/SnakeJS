@@ -10,7 +10,6 @@ $(document).ready(function(){
     var snake;
     var food;
     /* UI elements */
-    var gameUI = $('#gamePlayUI');
     /* game score */
     var gameScoreUI = $('#gameScoreUI');
     /* game over */
@@ -25,6 +24,12 @@ $(document).ready(function(){
     var gameDiffUI = $('#choose_diff_id');
     var easyDiffBtnUI = $('#easy_btn');
     var hardDiffBtnUI = $('#hard_btn');
+    /* images */
+    var snakeHeadImg = [];
+    var snakeBodyImg = new Image();
+    var foodImg = new Image();
+    var wallImg = new Image();
+    var bgImg = new Image();
 
     $(document).keydown(function(event){ Game.keys[event.keyCode] = true; });
 
@@ -54,6 +59,18 @@ $(document).ready(function(){
         /* default values */
         canvas.attr('width', width);
         canvas.attr('height', height);
+        /* load images */
+        for(var i = Direction.LEFT; i <= Direction.DOWN ; i++)
+            snakeHeadImg[i] = new Image();
+
+        snakeHeadImg[Direction.UP].src = "Images/snake/snake_head_up.png";
+        snakeHeadImg[Direction.LEFT].src = "Images/snake/snake_head_left.png";
+        snakeHeadImg[Direction.RIGHT].src = "Images/snake/snake_head_right.png";
+        snakeHeadImg[Direction.DOWN].src = "Images/snake/snake_head_down.png";
+        snakeBodyImg.src = "Images/snake/snake_body.png";
+        wallImg.src = "Images/wall.png";
+        foodImg.src = "Images/food.png";
+        bgImg.src = "Images/bg.png";
     };
 
     var hideGameOverUI = function(){
@@ -72,9 +89,7 @@ $(document).ready(function(){
         Game.init(canvas, canvas.get(0).getContext('2d'));
         Game.difficulty = Difficulty.EASY;
 
-        /* game objects
-        * snake */
-        snake = [];
+        /* game objects */
         snake = new Snake(tileSize);
 
         Map.init(tileSize);
@@ -105,9 +120,7 @@ $(document).ready(function(){
         Game.init(canvas, canvas.get(0).getContext('2d'));
         Game.difficulty = Difficulty.HARD;
 
-        /* game objects
-         * snake */
-        snake = [];
+        /* game objects */
         snake = new Snake(tileSize);
 
         Map.init(tileSize);
@@ -120,7 +133,7 @@ $(document).ready(function(){
         }
 
         /* init walls */
-        Game.drawWalls();
+        Map.drawWalls();
 
         /* food */
         food = new Food(tileSize);
@@ -189,26 +202,43 @@ $(document).ready(function(){
                  * image to the given position */
                  switch(Map.get(i, j)){
                     case Type.EMPTY:
-                        Game.context.fillStyle = '#3C798C';
-                        Game.context.fillRect(i* tileSize, j * tileSize, tileSize, tileSize);
-
+                        /*Game.context.fillStyle = '#3C798C';
+                        Game.context.fillRect(i* tileSize, j * tileSize, tileSize, tileSize);*/
+                        Game.context.drawImage(bgImg, i * tileSize, j * tileSize, tileSize, tileSize);
                         break;
 
                     case Type.SNAKE:
-                        if(i == snake.head.x && j == snake.head.y) Game.context.fillStyle = '#8C5E2E';
-                        else Game.context.fillStyle = '#402B15';
+                        if(i == snake.head.x && j == snake.head.y) {
+                            switch(Game.direction){
+                                case Direction.UP:
+                                    Game.context.drawImage(snakeHeadImg[Direction.UP], i * tileSize, j * tileSize, tileSize, tileSize)
+                                    break;
+                                case Direction.LEFT:
+                                    Game.context.drawImage(snakeHeadImg[Direction.LEFT], i * tileSize, j * tileSize, tileSize, tileSize)
+                                    break;
+                                case Direction.RIGHT:
+                                    Game.context.drawImage(snakeHeadImg[Direction.RIGHT], i * tileSize, j * tileSize, tileSize, tileSize)
+                                    break;
+                                case Direction.DOWN:
+                                    Game.context.drawImage(snakeHeadImg[Direction.DOWN], i * tileSize, j * tileSize, tileSize, tileSize)
+                                    break;
+                            }
+                        }
+                        else Game.context.drawImage(snakeBodyImg, i * tileSize, j * tileSize, tileSize, tileSize);
 
-                        Game.context.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
+                        /* Game.context.fillRect(i * tileSize, j * tileSize, tileSize, tileSize); */
                         break;
 
                     case Type.FOOD:
-                        Game.context.fillStyle = '#8C5012';
-                        Game.context.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
+                        /*Game.context.fillStyle = '#8C5012';
+                        Game.context.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);*/
+                        Game.context.drawImage(foodImg, i * tileSize, j * tileSize, tileSize, tileSize);
                         break;
 
                     case Type.WALL:
-                        Game.context.fillStyle = '#153640';
-                        Game.context.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
+                        /*Game.context.fillStyle = '#153640';
+                        Game.context.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);*/
+                        Game.context.drawImage(wallImg, i * tileSize, j * tileSize, tileSize, tileSize);
                         break;
                 }
             }
