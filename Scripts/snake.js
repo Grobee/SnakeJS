@@ -22,8 +22,6 @@ function Snake(tileSize, direction){
 
         this.parts.unshift({x: newCoords.x, y: newCoords.y});
         this.head = this.parts[0];
-
-        console.log(this.direction);
     };
 
     this.add = function(x, y){
@@ -36,5 +34,11 @@ function Snake(tileSize, direction){
         Map.set(Type.EMPTY, this.tail.x, this.tail.y);
         this.parts.pop();
         this.tail = this.parts[this.parts.length - 1];
+    };
+
+    this.removeFirst = function(){
+        //Map.set(Type.EMPTY, this.head.x, this.head.y);
+        this.parts.shift();
+        this.head = this.parts[0];
     };
 }
