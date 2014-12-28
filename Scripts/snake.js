@@ -1,22 +1,29 @@
-function Snake(tileSize){
+function Snake(tileSize, direction){
     this.parts = [];
 
     this.head = null;
     this.tail = null;
 
+    this.direction = direction;
+
     this.width = tileSize;
     this.height = tileSize;
+
+    this.headImg = [];
+    this.bodyImg = new Image();
 
     this.move = function(){
         var newCoords = { x: this.parts[0].x, y: this.parts[0].y};
 
-        if(Game.direction == Direction.UP) newCoords.y--;
-        if(Game.direction == Direction.DOWN) newCoords.y++;
-        if(Game.direction == Direction.LEFT) newCoords.x--;
-        if(Game.direction == Direction.RIGHT) newCoords.x++;
+        if(this.direction == Direction.UP || this.direction == DirectionWASD.UP) newCoords.y--;
+        if(this.direction == Direction.DOWN || this.direction == DirectionWASD.DOWN) newCoords.y++;
+        if(this.direction == Direction.LEFT || this.direction == DirectionWASD.LEFT) newCoords.x--;
+        if(this.direction == Direction.RIGHT || this.direction == DirectionWASD.RIGHT) newCoords.x++;
 
         this.parts.unshift({x: newCoords.x, y: newCoords.y});
         this.head = this.parts[0];
+
+        console.log(this.direction);
     };
 
     this.add = function(x, y){

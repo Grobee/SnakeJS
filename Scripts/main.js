@@ -7,7 +7,8 @@ $(document).ready(function(){
     const width = 672;
     const height = 672;
     /* game objects */
-    var snake;
+    var snakeOne;
+    var snakeTwo;
     var food;
     /* UI elements */
     /* game score */
@@ -18,27 +19,33 @@ $(document).ready(function(){
     var goToMenuUI = $("#goToMenuUI");
     /* menu */
     var menuUI = $('#menuUI');
-    var playUI = $('#playUI');
+    var onePlayerUI = $('#onePlayerUI');
+    var twoPlayerUI = $('#twoPlayerUI');
     var creditsUI = $('#creditsUI');
     /* choose game difficulty */
     var gameDiffUI = $('#choose_diff_id');
     var easyDiffBtnUI = $('#easy_btn');
     var hardDiffBtnUI = $('#hard_btn');
     /* images */
-    var snakeHeadImg = [];
-    var snakeBodyImg = new Image();
     var foodImg = new Image();
     var wallImg = new Image();
     var bgImg = new Image();
 
-    $(document).keydown(function(event){ Game.keys[event.keyCode] = true; });
+    $(document).keydown(function(event){ Game.keys[event.which] = true; console.log(Game.keys); });
 
     gameRestartUI.click(function(){
+        /* snake defaults */
+        snakeOne = new Snake(tileSize, Direction.UP);
+        snakeTwo = new Snake(tileSize, DirectionWASD.DOWN);
+
+        loadImages();
+
         if(Game.difficulty == Difficulty.EASY) initEasy();
         if(Game.difficulty == Difficulty.HARD) initHard();
     });
 
-    playUI.click(function(){ chooseMap(); });
+    onePlayerUI.click(function(){ Game.multiplayer = false; chooseMap(); });
+    twoPlayerUI.click(function() { Game.multiplayer = true; chooseMap(); });
 
     easyDiffBtnUI.click(function(){ initEasy(); });
     hardDiffBtnUI.click(function(){ initHard(); });
@@ -50,6 +57,8 @@ $(document).ready(function(){
     };
 
     var setDefault = function(){
+        snakeOne = new Snake(tileSize, Direction.UP);
+        snakeTwo = new Snake(tileSize, DirectionWASD.DOWN);
         /* default visibility */
         canvas.hide();
         gameScoreUI.hide();
@@ -59,15 +68,40 @@ $(document).ready(function(){
         /* default values */
         canvas.attr('width', width);
         canvas.attr('height', height);
-        /* load images */
-        for(var i = Direction.LEFT; i <= Direction.DOWN ; i++)
-            snakeHeadImg[i] = new Image();
 
-        snakeHeadImg[Direction.UP].src = "Images/snake/snake_head_up.png";
-        snakeHeadImg[Direction.LEFT].src = "Images/snake/snake_head_left.png";
-        snakeHeadImg[Direction.RIGHT].src = "Images/snake/snake_head_right.png";
-        snakeHeadImg[Direction.DOWN].src = "Images/snake/snake_head_down.png";
-        snakeBodyImg.src = "Images/snake/snake_body.png";
+        loadImages();
+    };
+
+    var loadImages =  function(){
+        /* pics */
+        /* load images */
+        /* snake one */
+        for(var i = Direction.LEFT; i <= Direction.DOWN ; i++)
+            snakeOne.headImg[i] = new Image();
+
+        snakeOne.headImg[Direction.UP].src = "Images/snake/snake_head_up.png";
+        snakeOne.headImg[Direction.LEFT].src = "Images/snake/snake_head_left.png";
+        snakeOne.headImg[Direction.RIGHT].src = "Images/snake/snake_head_right.png";
+        snakeOne.headImg[Direction.DOWN].src = "Images/snake/snake_head_down.png";
+
+        snakeOne.bodyImg.src = "Images/snake/snake_body.png";
+
+        /* snake two */
+        if(Game.multiplayer){
+            /* load images */
+            snakeTwo.headImg[DirectionWASD.UP] = new Image();
+            snakeTwo.headImg[DirectionWASD.LEFT] = new Image();
+            snakeTwo.headImg[DirectionWASD.RIGHT] = new Image();
+            snakeTwo.headImg[DirectionWASD.DOWN] = new Image();
+
+            snakeTwo.headImg[DirectionWASD.UP].src = "Images/snake/snake_head_up.png";
+            snakeTwo.headImg[DirectionWASD.LEFT].src = "Images/snake/snake_head_left.png";
+            snakeTwo.headImg[DirectionWASD.RIGHT].src = "Images/snake/snake_head_right.png";
+            snakeTwo.headImg[DirectionWASD.DOWN].src = "Images/snake/snake_head_down.png";
+
+            snakeTwo.bodyImg.src = "Images/snake/snake_body.png";
+        }
+
         wallImg.src = "Images/wall.png";
         foodImg.src = "Images/food.png";
         bgImg.src = "Images/bg.png";
@@ -90,14 +124,22 @@ $(document).ready(function(){
         Game.difficulty = Difficulty.EASY;
 
         /* game objects */
-        snake = new Snake(tileSize);
-
         Map.init(tileSize);
 
+        /* snake #1 */
         var index = { x: Math.floor(Map.rows /2), y: Math.floor(Map.columns / 2) };
         for(var i = 0; i < 3; i++) {
-            snake.add(index.x, index.y - i);
+            snakeOne.add(index.x, index.y - i);
             Map.set(Type.SNAKE, index.x, index.y - i);
+        }
+
+        /* snake #2 */
+        if(Game.multiplayer){
+            var index = { x: 4, y: 4 };
+            for(var i = 0; i < 3; i++) {
+                snakeTwo.add(index.x, index.y - i);
+                Map.set(Type.ENEMY, index.x, index.y - i);
+            }
         }
 
         /* food */
@@ -120,18 +162,23 @@ $(document).ready(function(){
         Game.init(canvas, canvas.get(0).getContext('2d'));
         Game.difficulty = Difficulty.HARD;
 
-        /* game objects */
-        snake = new Snake(tileSize);
-
         Map.init(tileSize);
 
         /* init snake */
         var index = { x: Math.floor(Map.rows - 3), y: Math.floor(Map.columns - 3) };
         for(var i = 0; i < 3; i++) {
-            snake.add(index.x, index.y - i);
+            snakeOne.add(index.x, index.y - i);
             Map.set(Type.SNAKE, index.x, index.y - i);
         }
 
+        /* snake #2 */
+        if(Game.multiplayer){
+            var index = { x: 4, y: 4 };
+            for(var i = 0; i < 3; i++) {
+                snakeTwo.add(index.x, index.y - i);
+                Map.set(Type.ENEMY, index.x, index.y - i);
+            }
+        }
         /* init walls */
         Map.drawWalls();
 
@@ -159,7 +206,9 @@ $(document).ready(function(){
     };
 
     var update = function(){
-        Game.checkKeys();
+        Game.checkKeys(snakeOne);
+        if(Game.multiplayer) Game.checkKeysWASD(snakeTwo);
+
         updateSnake();
         /* see if our snake hit a dead end */
         if(!Game.inProgress) return;
@@ -168,29 +217,46 @@ $(document).ready(function(){
 
     /* update the snake object's movement */
     var updateSnake = function(){
-        snake.move();
+        snakeOne.move();
 
-        if(Physics.checkIfOutOfBounds(snake.head)
-            || Physics.checkCollision(snake.head)){
+        if(Game.multiplayer){
+            snakeTwo.move();
+            Map.set(Type.ENEMY, snakeTwo.head.x, snakeTwo.head.y);
+        }
+
+        if(Physics.checkIfOutOfBounds(snakeOne.head)
+            || Physics.checkCollision(snakeOne.head)){
             /* inside */
             Game.inProgress = false;
             clearTimeout(gameLoop);
             /* outside */
             showGameOverUI();
         }
-        else { Map.set(Type.SNAKE, snake.head.x, snake.head.y); }
+        else { Map.set(Type.SNAKE, snakeOne.head.x, snakeOne.head.y); }
     };
 
     /* update the food object's position */
     var updateFood = function(){
-        if(Physics.checkCollision(snake.head, food)){
+        if(Physics.checkCollision(snakeOne.head, food)){
             food.spawn();
             Game.score++;
             gameScoreUI.html("Score: " + Game.score);
             Map.set(Type.FOOD, food.x, food.y);
         }
         else {
-            snake.removeLast();
+            snakeOne.removeLast();
+        }
+
+        if(Game.multiplayer){
+            if(Physics.checkCollision(snakeTwo.head, food)){
+                food.spawn();
+                Game.score++;
+                gameScoreUI.html("Score: " + Game.score);
+                Map.set(Type.FOOD, food.x, food.y);
+            }
+            else {
+                snakeTwo.removeLast();
+            }
         }
     };
 
@@ -202,48 +268,45 @@ $(document).ready(function(){
                  * image to the given position */
                  switch(Map.get(i, j)){
                     case Type.EMPTY:
-                        /*Game.context.fillStyle = '#3C798C';
-                        Game.context.fillRect(i* tileSize, j * tileSize, tileSize, tileSize);*/
                         Game.context.drawImage(bgImg, i * tileSize, j * tileSize, tileSize, tileSize);
                         break;
 
                     case Type.SNAKE:
-                        if(i == snake.head.x && j == snake.head.y) {
-                            switch(Game.direction){
+                        /* if the snake's head needs to be drawed */
+                        if(i == snakeOne.head.x && j == snakeOne.head.y) {
+                            switch(snakeOne.direction){
                                 case Direction.UP:
-                                    Game.context.drawImage(snakeHeadImg[Direction.UP], i * tileSize, j * tileSize, tileSize, tileSize)
+                                    Game.context.drawImage(snakeOne.headImg[Direction.UP], i * tileSize, j * tileSize, tileSize, tileSize);
                                     break;
                                 case Direction.LEFT:
-                                    Game.context.drawImage(snakeHeadImg[Direction.LEFT], i * tileSize, j * tileSize, tileSize, tileSize)
+                                    Game.context.drawImage(snakeOne.headImg[Direction.LEFT], i * tileSize, j * tileSize, tileSize, tileSize);
                                     break;
                                 case Direction.RIGHT:
-                                    Game.context.drawImage(snakeHeadImg[Direction.RIGHT], i * tileSize, j * tileSize, tileSize, tileSize)
+                                    Game.context.drawImage(snakeOne.headImg[Direction.RIGHT], i * tileSize, j * tileSize, tileSize, tileSize);
                                     break;
                                 case Direction.DOWN:
-                                    Game.context.drawImage(snakeHeadImg[Direction.DOWN], i * tileSize, j * tileSize, tileSize, tileSize)
+                                    Game.context.drawImage(snakeOne.headImg[Direction.DOWN], i * tileSize, j * tileSize, tileSize, tileSize);
                                     break;
                             }
-                        }
-                        else Game.context.drawImage(snakeBodyImg, i * tileSize, j * tileSize, tileSize, tileSize);
-
-                        /* Game.context.fillRect(i * tileSize, j * tileSize, tileSize, tileSize); */
+                        } /* if its body */
+                        else Game.context.drawImage(snakeOne.bodyImg, i * tileSize, j * tileSize, tileSize, tileSize);
                         break;
 
                     case Type.FOOD:
-                        /*Game.context.fillStyle = '#8C5012';
-                        Game.context.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);*/
                         Game.context.drawImage(foodImg, i * tileSize, j * tileSize, tileSize, tileSize);
                         break;
 
                     case Type.WALL:
-                        /*Game.context.fillStyle = '#153640';
-                        Game.context.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);*/
                         Game.context.drawImage(wallImg, i * tileSize, j * tileSize, tileSize, tileSize);
                         break;
+
+                    case Type.ENEMY:
+                        Game.context.fillStyle = "rgb(128,128,0)";
+                        Game.context.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
+                        break
                 }
             }
         }
     };
-
     setDefault();
 });
