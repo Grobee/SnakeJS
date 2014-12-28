@@ -5,6 +5,7 @@ function Snake(tileSize, direction){
     this.tail = null;
 
     this.direction = direction;
+    this.collisionWith = null;
 
     this.width = tileSize;
     this.height = tileSize;
@@ -37,8 +38,7 @@ function Snake(tileSize, direction){
     };
 
     this.removeFirst = function(){
-        //Map.set(Type.EMPTY, this.head.x, this.head.y);
         this.parts.shift();
         this.head = this.parts[0];
-    };
+    }
 }

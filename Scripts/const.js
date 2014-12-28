@@ -3,7 +3,8 @@ var Type = {
     SNAKE: 1,
     FOOD: 2,
     WALL: 3,
-    ENEMY: 4
+    ENEMY: 4,
+    DEAD: 5
 };
 
 var Direction = {

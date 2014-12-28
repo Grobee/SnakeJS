@@ -33,6 +33,7 @@ $(document).ready(function(){
     var foodImg = new Image();
     var wallImg = new Image();
     var bgImg = new Image();
+    var deadImg = new Image();
 
     $(document).keydown(function(event){ Game.keys[event.which] = true; });
 
@@ -106,6 +107,7 @@ $(document).ready(function(){
         wallImg.src = "Images/wall.png";
         foodImg.src = "Images/food.png";
         bgImg.src = "Images/bg.png";
+        deadImg.src = "Images/dead.png";
     };
 
     var hideGameOverUI = function(){
@@ -210,10 +212,8 @@ $(document).ready(function(){
     var animate = function(){
         update();
 
-        if(Game.inProgress){
-            draw();
-            setTimeout(animate, fps);
-        }
+        if(Game.inProgress || Game.tie) draw();
+        if(Game.inProgress) setTimeout(animate, fps);
     };
 
     var update = function(){
@@ -227,17 +227,17 @@ $(document).ready(function(){
 
     /* update the Snake object's movement */
     var updateSnake = function(){
+        var collisions = 0;
         snakeOne.move();
 
         if(Physics.checkIfOutOfBounds(snakeOne.head)
             || Physics.checkCollision(snakeOne)){
             /* inside */
+            collisions++;
             Game.inProgress = false;
             clearTimeout(gameLoop);
             /* outside */
-            showGameOverUI();
-            Game.winner = "<span style='font-size: 0.6em;'>The winner is</span><br /><p style='color: orange;'>Player2</p>";
-            if(Game.multiplayer) gameOverTextUI.html(Game.winner);
+            Game.winner = "<span style='font-size: 0.6em;'>The winner is</span><br /><p  style='font-size: 1.1em; color: orange;'>Player2</p>";
         }
         else { Map.set(Type.SNAKE, snakeOne.head.x, snakeOne.head.y); }
 
@@ -247,14 +247,36 @@ $(document).ready(function(){
             if(Physics.checkIfOutOfBounds(snakeTwo.head)
                 || Physics.checkCollision(snakeTwo)){
                 /* inside */
+                collisions++;
                 Game.inProgress = false;
                 clearTimeout(gameLoop);
                 /* outside */
-                showGameOverUI();
-                Game.winner = "<span style='font-size: 0.6em;'>The winner is</span><br /><p style='color: green;'>Player1</p>";
-                gameOverTextUI.html(Game.winner);
+                Game.winner = "<span style='font-size: 0.6em;'>The winner is</span><br /><p style='font-size: 1.1em; color: green;'>Player1</p>";
             }
             else { Map.set(Type.ENEMY, snakeTwo.head.x, snakeTwo.head.y); }
+
+            if(Physics.checkCollision(snakeOne.head, snakeTwo.head)) {
+                Map.set(Type.DEAD, snakeOne.head.x, snakeOne.head.y);
+                collisions = 2;
+                snakeOne.removeLast();
+                snakeTwo.removeLast();
+            }
+        }
+
+        if(collisions == 2 && !Game.inProgress && Game.multiplayer){
+            if(snakeOne.collisionWith == Type.WALL) snakeOne.removeFirst();
+            if(snakeTwo.collisionWith == Type.WALL) snakeTwo.removeFirst();
+            showGameOverUI();
+            Game.tie = true;
+            Game.winner = "<span style='font-size: 0.6em;'>There is no winner</span><br /><p style='font-size: 1.1em; color: darkred;'>TIE</p>";
+            gameOverTextUI.html(Game.winner);
+        }
+        else if(!Game.inProgress && Game.multiplayer){
+            showGameOverUI();
+            gameOverTextUI.html(Game.winner);}
+        else if(!Game.multiplayer && !Game.inProgress){
+            showGameOverUI();
+            gameOverTextUI.html("WASTED");
         }
     };
 
@@ -284,6 +306,7 @@ $(document).ready(function(){
     };
 
     var draw = function(){
+        Game.tie = false;
         Game.context.clearRect(0, 0, Game.width, Game.height);
         /* draw out the tiles */
         for(var i = 0; i < Map.rows; i++){
@@ -341,7 +364,11 @@ $(document).ready(function(){
                                     break;
                             }
                         } else Game.context.drawImage(snakeTwo.bodyImg, i * tileSize, j * tileSize, tileSize, tileSize);
-                    break;
+                        break;
+
+                    case Type.DEAD:
+                        Game.context.drawImage(deadImg, i * tileSize, j * tileSize, tileSize, tileSize);
+                        break;
                  }
             }
         }
