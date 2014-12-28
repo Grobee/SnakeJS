@@ -11,10 +11,13 @@ $(document).ready(function(){
     var snakeTwo;
     var food;
     /* UI elements */
-    /* game score */
+    /* game scoreOne */
     var gameScoreUI = $('#gameScoreUI');
+    var scorePlayerOne = $('#scorePlayerOne');
+    var scorePlayerTwo = $('#scorePlayerTwo');
     /* game over */
     var gameOverUI = $('#gameOverUI');
+    var gameOverTextUI = $('#gameOverTextUI');
     var gameRestartUI = $('#gameRestartUI');
     var goToMenuUI = $("#goToMenuUI");
     /* menu */
@@ -151,8 +154,10 @@ $(document).ready(function(){
         /* UI */
         hideGameOverUI();
         canvas.show();
-        gameScoreUI.html("Score: 0");
+        scorePlayerOne.html("Score: 0");
+        scorePlayerTwo.html("Score: 0");
         gameScoreUI.show();
+        if(!Game.multiplayer) scorePlayerTwo.hide();
         menuUI.hide();
         gameLoop = setTimeout(animate, fps);
     };
@@ -194,16 +199,21 @@ $(document).ready(function(){
         /* UI */
         hideGameOverUI();
         canvas.show();
-        gameScoreUI.html("Score: 0");
+        scorePlayerOne.html("Score: 0");
+        scorePlayerTwo.html("Score: 0");
         gameScoreUI.show();
+        if(!Game.multiplayer) scorePlayerTwo.hide();
         menuUI.hide();
         gameLoop = setTimeout(animate, fps);
     };
 
     var animate = function(){
         update();
-        if(Game.inProgress) draw();
-        if(Game.inProgress) setTimeout(animate, fps);
+
+        if(Game.inProgress){
+            draw();
+            setTimeout(animate, fps);
+        }
     };
 
     var update = function(){
@@ -226,6 +236,8 @@ $(document).ready(function(){
             clearTimeout(gameLoop);
             /* outside */
             showGameOverUI();
+            Game.winner = "<span style='font-size: 0.6em;'>The winner is</span><br /><p style='color: orange;'>Player2</p>";
+            if(Game.multiplayer) gameOverTextUI.html(Game.winner);
         }
         else { Map.set(Type.SNAKE, snakeOne.head.x, snakeOne.head.y); }
 
@@ -239,6 +251,8 @@ $(document).ready(function(){
                 clearTimeout(gameLoop);
                 /* outside */
                 showGameOverUI();
+                Game.winner = "<span style='font-size: 0.6em;'>The winner is</span><br /><p style='color: green;'>Player1</p>";
+                gameOverTextUI.html(Game.winner);
             }
             else { Map.set(Type.ENEMY, snakeTwo.head.x, snakeTwo.head.y); }
         }
@@ -248,8 +262,8 @@ $(document).ready(function(){
     var updateFood = function(){
         if(Physics.checkCollision(snakeOne.head, food)){
             food.spawn();
-            Game.score++;
-            gameScoreUI.html("Score: " + Game.score);
+            Game.scoreOne++;
+            scorePlayerOne.html("Score: " + Game.scoreOne);
             Map.set(Type.FOOD, food.x, food.y);
         }
         else {
@@ -259,8 +273,8 @@ $(document).ready(function(){
         if(Game.multiplayer){
             if(Physics.checkCollision(snakeTwo.head, food)){
                 food.spawn();
-                Game.score++;
-                gameScoreUI.html("Score: " + Game.score);
+                Game.scoreTwo++;
+                scorePlayerTwo.html("Score: " + Game.scoreTwo);
                 Map.set(Type.FOOD, food.x, food.y);
             }
             else {

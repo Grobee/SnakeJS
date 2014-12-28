@@ -8,8 +8,11 @@ body { margin: 1% auto 0 auto; width: 1024px; background-color: cadetblue; }
 /* the menu UI */
 #menuUI { position: absolute; font-size: 36px; width: 100%; height: 100%; display: block; font-family: "Arcade Classic", sans-serif; color: #fff; background: url('../Images/menu_bg.png') no-repeat; }
 #menuUIButtons { position: inherit; top: 40%; width: 100%; text-align: center; font-variant: small-caps; cursor: pointer; }
-/* game score UI */
-#gameScoreUI { position: absolute; top: 103%; display: block; font-family: "Arcade Classic", sans-serif; color: #fff; font-size: 24px; }
+/* game scoreOne UI */
+#gameScoreUI { width: 100%; position: absolute; top: 103%; display: block; font-family: "Arcade Classic", sans-serif; color: #fff; font-size: 24px; }
+#gameScoreUI:after { clear: both; }
+#scorePlayerOne { float: right; }
+#scorePlayerTwo { float: left; }
 /* game over UI*/
 #gameOverUI { position: absolute; bottom: 45%; text-align: center; width: 100%; display: block; font-family: "Arcade Classic", sans-serif; background-color: #000; opacity: 0.8; color: #fff; padding: 5px 0 5px 0; }
 #gameOverTextUI { display: block; font-size: 48px; }

@@ -6,10 +6,12 @@ var Game = {
     height: 0,
 
     multiplayer: false,
-    score: 0,
+    scoreOne: 0,
+    scoreTwo: 0,
     inProgress: false,
     difficulty: Difficulty.EASY,
     keys: [],
+    winner: null,
 
     init: function(canvas, context){
         /* game canvas*/
@@ -20,7 +22,8 @@ var Game = {
         /* game attributes */
         this.direction = Direction.UP;
         this.inProgress = true;
-        this.score = 0;
+        this.scoreOne = 0;
+        this.scoreTwo = 0;
         /* populate the keys array */
         for(var i = 37; i <= 40; i++)
             Game.keys[i] = false;
