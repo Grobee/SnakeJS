@@ -25,8 +25,11 @@ var Physics = {
 
     checkCollision: function(obj1, obj2){
         if(obj2){ return !!(obj1.x == obj2.x && obj1.y == obj2.y); }
-        else { return !!(Map.tiles[obj1.head.x][obj1.head.y] == Type.SNAKE
+        else {
+            if(Map.tiles[obj1.head.x][obj1.head.y] == Type.WALL) obj1.collisionWith = Type.WALL;
+            return !!(Map.tiles[obj1.head.x][obj1.head.y] == Type.SNAKE
                 || Map.tiles[obj1.head.x][obj1.head.y] == Type.ENEMY
-                || Map.tiles[obj1.head.x][obj1.head.y] == Type.WALL); }
+                || Map.tiles[obj1.head.x][obj1.head.y] == Type.WALL);
+        }
     }
 };
