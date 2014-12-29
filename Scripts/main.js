@@ -35,6 +35,8 @@ $(document).ready(function(){
     var optionsBtn = $('#optionsBtn');
     var optionsBackBtn = $('#optionsBackBtn');
     var doSoundEffects;
+    var timeChallengeCheck = $('#timechallenge_check');
+    var doTimeChallenge;
     /* choose game difficulty */
     var gameDiffUI = $('#choose_diff_id');
     var easyDiffBtnUI = $('#easy_btn');
@@ -179,7 +181,11 @@ $(document).ready(function(){
     };
 
     var initEasy = function(){
+        /* sound effects */
         doSoundEffects = $('#sound_effect_checkbox').prop('checked');
+        /* time challenge */
+        doTimeChallenge = timeChallengeCheck.prop('checked');
+        /* the rest */
         loadSnakeImages();
         gameDiffUI.hide();
         /* game initEasy */
@@ -238,7 +244,11 @@ $(document).ready(function(){
     };
 
     var initHard = function(){
+        /* sound effects */
         doSoundEffects = $('#sound_effect_checkbox').prop('checked');
+        /* time challenge */
+        doTimeChallenge = timeChallengeCheck.prop('checked');
+        /* the rest */
         loadSnakeImages();
         gameDiffUI.hide();
         /* game initEasy */
