@@ -10,6 +10,10 @@ $(document).ready(function(){
     var snakeOne;
     var snakeTwo;
     var food;
+    /* time */
+    var startTime;
+    var remainingTurns = 0; /* if the player picks up a bonus food the snake will rise by 2 */
+    var remainingTimeUI = $('#remainingTimeUI');
     /* UI elements */
     /* game scoreOne */
     var gameScoreUI = $('#gameScoreUI');
@@ -31,6 +35,7 @@ $(document).ready(function(){
     var hardDiffBtnUI = $('#hard_btn');
     /* images */
     var foodImg = new Image();
+    var bonusFoodImg = new Image();
     var wallImg = new Image();
     var bgImg = new Image();
     var deadImg = new Image();
@@ -106,6 +111,7 @@ $(document).ready(function(){
 
         wallImg.src = "Images/wall.png";
         foodImg.src = "Images/food.png";
+        bonusFoodImg.src = "Images/food_bonus.png";
         bgImg.src = "Images/bg.png";
         deadImg.src = "Images/dead.png";
     };
@@ -151,6 +157,7 @@ $(document).ready(function(){
         /* food */
         food = new Food(tileSize);
         food.spawn();
+        if(food.bonus) startTime = $.now();
         Map.set(Type.FOOD, food.x, food.y);
 
         /* UI */
@@ -160,6 +167,12 @@ $(document).ready(function(){
         scorePlayerTwo.html("Score: 0");
         gameScoreUI.show();
         if(!Game.multiplayer) scorePlayerTwo.hide();
+        if(food.bonus) {
+            var time = Math.ceil(((startTime + 5000) - $.now()) / 1000);
+            remainingTimeUI.html("00:0" + time);
+            remainingTimeUI.show();
+        }
+        else remainingTimeUI.hide();
         menuUI.hide();
         gameLoop = setTimeout(animate, fps);
     };
@@ -196,6 +209,7 @@ $(document).ready(function(){
         /* food */
         food = new Food(tileSize);
         food.spawn();
+        if(food.bonus) startTime = $.now();
         Map.set(Type.FOOD, food.x, food.y);
 
         /* UI */
@@ -205,6 +219,12 @@ $(document).ready(function(){
         scorePlayerTwo.html("Score: 0");
         gameScoreUI.show();
         if(!Game.multiplayer) scorePlayerTwo.hide();
+        if(food.bonus) {
+            var time = Math.ceil(((startTime + 5000) - $.now()) / 1000);
+            remainingTimeUI.html("00:0" + time);
+            remainingTimeUI.show();
+        }
+        else remainingTimeUI.hide();
         menuUI.hide();
         gameLoop = setTimeout(animate, fps);
     };
@@ -283,26 +303,53 @@ $(document).ready(function(){
     /* update the food object's position */
     var updateFood = function(){
         if(Physics.checkCollision(snakeOne.head, food)){
+            if(food.bonus) {
+                Game.scoreOne += 2;
+                remainingTurns = 2;
+            }
+            else Game.scoreOne++;
             food.spawn();
-            Game.scoreOne++;
             scorePlayerOne.html("Score: " + Game.scoreOne);
             Map.set(Type.FOOD, food.x, food.y);
+            if(food.bonus) startTime = $.now();
         }
         else {
-            snakeOne.removeLast();
+            if(remainingTurns == 0) snakeOne.removeLast();
         }
 
         if(Game.multiplayer){
             if(Physics.checkCollision(snakeTwo.head, food)){
+                if(food.bonus) {
+                    Game.scoreTwo += 2;
+                    remainingTurns = 2;
+                }
+                else Game.scoreTwo++;
                 food.spawn();
-                Game.scoreTwo++;
                 scorePlayerTwo.html("Score: " + Game.scoreTwo);
                 Map.set(Type.FOOD, food.x, food.y);
+                if(food.bonus) startTime = $.now();
             }
             else {
-                snakeTwo.removeLast();
+                if(remainingTurns == 0) snakeTwo.removeLast();
             }
         }
+
+        if(food.bonus && $.now() - startTime >= 5000){
+            Map.set(Type.EMPTY, food.x, food.y);
+            food.spawn();
+            console.log("x: " + food.x + " y: " + food.y);
+            Map.set(Type.FOOD, food.x, food.y);
+            startTime = $.now();
+        }
+
+        if(food.bonus) {
+            var time = Math.ceil(((startTime + 5000) - $.now()) / 1000);
+            remainingTimeUI.html("00:0" + time);
+            remainingTimeUI.show();
+        }
+        else remainingTimeUI.hide();
+
+        if(remainingTurns > 0) remainingTurns--;
     };
 
     var draw = function(){
@@ -340,7 +387,8 @@ $(document).ready(function(){
                         break;
 
                     case Type.FOOD:
-                        Game.context.drawImage(foodImg, i * tileSize, j * tileSize, tileSize, tileSize);
+                        if(food.bonus) Game.context.drawImage(bonusFoodImg, i * tileSize, j * tileSize, tileSize, tileSize);
+                        else Game.context.drawImage(foodImg, i * tileSize, j * tileSize, tileSize, tileSize);
                         break;
 
                     case Type.WALL:
