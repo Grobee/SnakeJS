@@ -166,7 +166,8 @@ $(document).ready(function(){
         scorePlayerOne.html("Score: 0");
         scorePlayerTwo.html("Score: 0");
         gameScoreUI.show();
-        if(!Game.multiplayer) scorePlayerTwo.hide();
+        scorePlayerTwo.hide();
+        if(Game.multiplayer) scorePlayerTwo.show();
         if(food.bonus) {
             var time = Math.ceil(((startTime + 5000) - $.now()) / 1000);
             remainingTimeUI.html("00:0" + time);
@@ -218,7 +219,8 @@ $(document).ready(function(){
         scorePlayerOne.html("Score: 0");
         scorePlayerTwo.html("Score: 0");
         gameScoreUI.show();
-        if(!Game.multiplayer) scorePlayerTwo.hide();
+        scorePlayerTwo.hide();
+        if(Game.multiplayer) scorePlayerTwo.show();
         if(food.bonus) {
             var time = Math.ceil(((startTime + 5000) - $.now()) / 1000);
             remainingTimeUI.html("00:0" + time);
