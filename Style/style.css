@@ -8,18 +8,25 @@ body { margin: 0 auto 0 auto; width: 1024px; background-color: cadetblue; overfl
 #mainCanvas { position: absolute; background: #000; display: block; }
 /* the menu UI */
 #menuUI { position: absolute; font-size: 36px; width: 100%; height: 100%; display: block; font-family: "Arcade Classic", sans-serif; color: #fff; background: url('../Images/menu_bg.png') no-repeat; }
-#menuUIButtons { position: inherit; top: 40%; width: 100%; text-align: center; font-variant: small-caps; cursor: pointer; }
+.menuUIButtons { display: block; position: inherit; top: 40%; width: 100%; text-align: center; font-variant: small-caps; cursor: pointer; }
 /* game scoreOne UI */
-#gameScoreUI { z-index: 1; padding-bottom: 4%; opacity: 0.5; background-color: cadetblue; width: 100%; position: absolute; top: 0; display: block; font-family: "Arcade Classic", sans-serif; color: #fff; font-size: 24px; }
+#gameScoreUI { padding-bottom: 4%; opacity: 0.5; background-color: cadetblue; width: 100%; position: absolute; top: 0; display: block; font-family: "Arcade Classic", sans-serif; color: #fff; font-size: 24px; }
 #scorePlayerOne { position: absolute; left: 82%; }
 #remainingTimeUI { position: absolute; left: 45%; }
 #scorePlayerTwo { position: absolute; left: 1%; }
-
 /* game over UI*/
 #gameOverUI { position: absolute; bottom: 45%; text-align: center; width: 100%; display: block; font-family: "Arcade Classic", sans-serif; background-color: #000; opacity: 0.8; color: #fff; padding: 5px 0 5px 0; }
 #gameOverTextUI { display: block; font-size: 48px; }
 #gameRestartUI { display: block; font-size: 36px; cursor: pointer; font-variant: small-caps; }
 #goToMenuUI { display: block; font-size: 36px; cursor: pointer; font-variant: small-caps; }
+/* options */
+#optionsUI { position: absolute; font-size: 36px; width: 100%; height: 100%; display: block; font-family: "Arcade Classic", sans-serif; color: #fff; background: url('../Images/menu_bg.png') no-repeat; }
+#optionsBackBtn { cursor: pointer; top: 65%; }
+#musicUI { top: 46%; }
+#music_select_id { width: 40%; border: 0; left: 31%; padding: 1em; text-align: center; }
+#timeChallengeUI { top: 54%; }
+#timechallenge_check { padding: 2em; }
+#sound_effect_option { top: 59%; }
 /* choose game difficulty / map */
 #choose_diff_id { position: absolute; color: white; width: 100%; height: 100%; background: #000; background: url('../Images/menu_bg.png') no-repeat; }
 #choose_diff_id:after { clear: both; }

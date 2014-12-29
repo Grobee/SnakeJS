@@ -14,6 +14,7 @@ $(document).ready(function(){
     var startTime;
     var remainingTurns = 0; /* if the player picks up a bonus food the snake will rise by 2 */
     var remainingTimeUI = $('#remainingTimeUI');
+    var previousTime = 0;
     /* UI elements */
     /* game scoreOne */
     var gameScoreUI = $('#gameScoreUI');
@@ -29,6 +30,11 @@ $(document).ready(function(){
     var onePlayerUI = $('#onePlayerUI');
     var twoPlayerUI = $('#twoPlayerUI');
     var creditsUI = $('#creditsUI');
+    /* options */
+    var optionsUI = $('#optionsUI');
+    var optionsBtn = $('#optionsBtn');
+    var optionsBackBtn = $('#optionsBackBtn');
+    var doSoundEffects;
     /* choose game difficulty */
     var gameDiffUI = $('#choose_diff_id');
     var easyDiffBtnUI = $('#easy_btn');
@@ -39,6 +45,13 @@ $(document).ready(function(){
     var wallImg = new Image();
     var bgImg = new Image();
     var deadImg = new Image();
+    /* music */
+    var songs = [];
+    var currentlyPlaying = null;
+    /* sound effects */
+    var eatingSound = new Audio('Sound/eat.ogg');
+    var hitSound = new Audio('Sound/hit.ogg');
+    var tickSound = new Audio('Sound/tick.ogg');
 
     $(document).keydown(function(event){ Game.keys[event.which] = true; });
 
@@ -47,18 +60,40 @@ $(document).ready(function(){
         snakeOne = new Snake(tileSize, Direction.UP);
         snakeTwo = new Snake(tileSize, DirectionWASD.DOWN);
 
-        loadImages();
+        loadSnakeImages();
+        reloadSongs();
 
         if(Game.difficulty == Difficulty.EASY) initEasy();
         if(Game.difficulty == Difficulty.HARD) initHard();
     });
 
+    /* game mode */
     onePlayerUI.click(function(){ Game.multiplayer = false; chooseMap(); });
     twoPlayerUI.click(function() { Game.multiplayer = true; chooseMap(); });
 
+    /* choose difficulty */
     easyDiffBtnUI.click(function(){ initEasy(); });
     hardDiffBtnUI.click(function(){ initHard(); });
-    goToMenuUI.click(function() { setDefault(); });
+    goToMenuUI.click(function() { stopMusic(); setDefault(); });
+
+    var stopMusic = function(){
+        if(currentlyPlaying != null){
+            currentlyPlaying.pause();
+            reloadSongs();
+            currentlyPlaying = null;
+        }
+    };
+
+    /* options */
+    optionsBtn.click(function(){
+        optionsUI.show();
+        menuUI.hide();
+    });
+
+    optionsBackBtn.click(function(){
+        menuUI.show();
+        optionsUI.hide();
+    });
 
     var chooseMap = function(){
         gameDiffUI.show();
@@ -71,6 +106,7 @@ $(document).ready(function(){
         /* default visibility */
         canvas.hide();
         gameScoreUI.hide();
+        optionsUI.hide();
         gameOverUI.hide();
         gameDiffUI.hide();
         menuUI.show();
@@ -79,7 +115,29 @@ $(document).ready(function(){
         canvas.attr('height', height);
     };
 
-    var loadImages =  function(){
+    var loadSongs = function(){
+        songs[0] = new Audio("Music/ACDC - Highway To Hell.ogg");
+        songs[1] = new Audio("Music/Creedence Clearwater Revival - Fortunate Son.ogg");
+        songs[2] = new Audio("Music/Creedence Clearwater Revival - Have You Ever Seen The Rain.ogg");
+        songs[3] = new Audio("Music/Guns N Roses - Paradise City.ogg");
+        songs[4] = new Audio("Music/The Doors - Riders on the Storm.ogg");
+    };
+
+    var reloadSongs = function(){
+        if($('#music_select_id').val() != 5) {
+            songs[$('#music_select_id').val()].load();
+        }
+    };
+
+    var loadImages = function(){
+        wallImg.src = "Images/wall.png";
+        foodImg.src = "Images/food.png";
+        bonusFoodImg.src = "Images/food_bonus.png";
+        bgImg.src = "Images/bg.png";
+        deadImg.src = "Images/dead.png";
+    };
+
+    var loadSnakeImages = function(){
         /* pics */
         /* load images */
         /* Snake one */
@@ -108,12 +166,6 @@ $(document).ready(function(){
 
             snakeTwo.bodyImg.src = "Images/Enemy/enemy_body.png";
         }
-
-        wallImg.src = "Images/wall.png";
-        foodImg.src = "Images/food.png";
-        bonusFoodImg.src = "Images/food_bonus.png";
-        bgImg.src = "Images/bg.png";
-        deadImg.src = "Images/dead.png";
     };
 
     var hideGameOverUI = function(){
@@ -127,9 +179,8 @@ $(document).ready(function(){
     };
 
     var initEasy = function(){
-        /* load images */
-        loadImages();
-
+        doSoundEffects = $('#sound_effect_checkbox').prop('checked');
+        loadSnakeImages();
         gameDiffUI.hide();
         /* game initEasy */
         Game.init(canvas, canvas.get(0).getContext('2d'));
@@ -175,13 +226,20 @@ $(document).ready(function(){
         }
         else remainingTimeUI.hide();
         menuUI.hide();
+
+        /* music */
+        if($('#music_select_id').val() != 5) {
+            songs[$('#music_select_id').val()].play();
+            songs[$('#music_select_id').val()].loop = true;
+            currentlyPlaying = songs[$('#music_select_id').val()];
+        }
+
         gameLoop = setTimeout(animate, fps);
     };
 
     var initHard = function(){
-        /* load images */
-        loadImages();
-
+        doSoundEffects = $('#sound_effect_checkbox').prop('checked');
+        loadSnakeImages();
         gameDiffUI.hide();
         /* game initEasy */
         Game.init(canvas, canvas.get(0).getContext('2d'));
@@ -228,6 +286,13 @@ $(document).ready(function(){
         }
         else remainingTimeUI.hide();
         menuUI.hide();
+
+        if($('#music_select_id').val() != 5) {
+            songs[$('#music_select_id').val()].play();
+            songs[$('#music_select_id').val()].loop = true;
+            currentlyPlaying = songs[$('#music_select_id').val()];
+        }
+
         gameLoop = setTimeout(animate, fps);
     };
 
@@ -255,6 +320,7 @@ $(document).ready(function(){
         if(Physics.checkIfOutOfBounds(snakeOne.head)
             || Physics.checkCollision(snakeOne)){
             /* inside */
+            if(doSoundEffects) hitSound.play();
             collisions++;
             Game.inProgress = false;
             clearTimeout(gameLoop);
@@ -269,6 +335,7 @@ $(document).ready(function(){
             if(Physics.checkIfOutOfBounds(snakeTwo.head)
                 || Physics.checkCollision(snakeTwo)){
                 /* inside */
+                if(doSoundEffects) hitSound.play();
                 collisions++;
                 Game.inProgress = false;
                 clearTimeout(gameLoop);
@@ -279,6 +346,7 @@ $(document).ready(function(){
 
             if(Physics.checkCollision(snakeOne.head, snakeTwo.head)) {
                 Map.set(Type.DEAD, snakeOne.head.x, snakeOne.head.y);
+                if(doSoundEffects) hitSound.play();
                 collisions = 2;
                 snakeOne.removeLast();
                 snakeTwo.removeLast();
@@ -288,15 +356,18 @@ $(document).ready(function(){
         if(collisions == 2 && !Game.inProgress && Game.multiplayer){
             if(snakeOne.collisionWith == Type.WALL) snakeOne.removeFirst();
             if(snakeTwo.collisionWith == Type.WALL) snakeTwo.removeFirst();
+            stopMusic();
             showGameOverUI();
             Game.tie = true;
             Game.winner = "<span style='font-size: 0.6em;'>There is no winner</span><br /><p style='font-size: 1.1em; color: darkred;'>TIE</p>";
             gameOverTextUI.html(Game.winner);
         }
         else if(!Game.inProgress && Game.multiplayer){
+            stopMusic();
             showGameOverUI();
             gameOverTextUI.html(Game.winner);}
         else if(!Game.multiplayer && !Game.inProgress){
+            stopMusic();
             showGameOverUI();
             gameOverTextUI.html("WASTED");
         }
@@ -305,6 +376,7 @@ $(document).ready(function(){
     /* update the food object's position */
     var updateFood = function(){
         if(Physics.checkCollision(snakeOne.head, food)){
+            if(doSoundEffects == true) eatingSound.play();
             if(food.bonus) {
                 Game.scoreOne += 2;
                 remainingTurns = 2;
@@ -321,6 +393,7 @@ $(document).ready(function(){
 
         if(Game.multiplayer){
             if(Physics.checkCollision(snakeTwo.head, food)){
+                if(doSoundEffects) eatingSound.play();
                 if(food.bonus) {
                     Game.scoreTwo += 2;
                     remainingTurns = 2;
@@ -336,7 +409,13 @@ $(document).ready(function(){
             }
         }
 
+        if(food.bonus && $.now() - previousTime >= 1000){
+            if(doSoundEffects) tickSound.play();
+            previousTime = $.now();
+        }
+
         if(food.bonus && $.now() - startTime >= 5000){
+            tickSound.play();
             Map.set(Type.EMPTY, food.x, food.y);
             food.spawn();
             console.log("x: " + food.x + " y: " + food.y);
@@ -423,5 +502,7 @@ $(document).ready(function(){
             }
         }
     };
+    loadSongs();
+    loadImages();
     setDefault();
 });
