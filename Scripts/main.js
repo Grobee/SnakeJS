@@ -15,6 +15,9 @@ $(document).ready(function(){
     var remainingTurns = 0; /* if the player picks up a bonus food the snake will rise by 2 */
     var remainingTimeUI = $('#remainingTimeUI');
     var previousTime = 0;
+    /* time handling for time challenge */
+    var timeStart;
+    var previousTimeStart;
     /* UI elements */
     /* game scoreOne */
     var gameScoreUI = $('#gameScoreUI');
@@ -35,8 +38,6 @@ $(document).ready(function(){
     var optionsBtn = $('#optionsBtn');
     var optionsBackBtn = $('#optionsBackBtn');
     var doSoundEffects;
-    var timeChallengeCheck = $('#timechallenge_check');
-    var doTimeChallenge;
     /* choose game difficulty */
     var gameDiffUI = $('#choose_diff_id');
     var easyDiffBtnUI = $('#easy_btn');
@@ -183,14 +184,17 @@ $(document).ready(function(){
     var initEasy = function(){
         /* sound effects */
         doSoundEffects = $('#sound_effect_checkbox').prop('checked');
-        /* time challenge */
-        doTimeChallenge = timeChallengeCheck.prop('checked');
         /* the rest */
         loadSnakeImages();
         gameDiffUI.hide();
         /* game initEasy */
         Game.init(canvas, canvas.get(0).getContext('2d'));
+        /* time challenge */
+        Game.timeChallenge = $('#timechallenge_check').prop('checked');
         Game.difficulty = Difficulty.EASY;
+
+        if(Game.timeChallenge) timeStart = $.now();
+        console.log(Game.timeChallenge);
 
         /* game objects */
         Map.init(tileSize);
@@ -246,14 +250,16 @@ $(document).ready(function(){
     var initHard = function(){
         /* sound effects */
         doSoundEffects = $('#sound_effect_checkbox').prop('checked');
-        /* time challenge */
-        doTimeChallenge = timeChallengeCheck.prop('checked');
         /* the rest */
         loadSnakeImages();
         gameDiffUI.hide();
         /* game initEasy */
         Game.init(canvas, canvas.get(0).getContext('2d'));
+        /* time challenge */
+        Game.timeChallenge = $('#timechallenge_check').prop('checked');
         Game.difficulty = Difficulty.HARD;
+
+        if(Game.timeChallenge) timeStart = $.now();
 
         Map.init(tileSize);
 
@@ -363,6 +369,7 @@ $(document).ready(function(){
             }
         }
 
+        /* if each players have collided */
         if(collisions == 2 && !Game.inProgress && Game.multiplayer){
             if(snakeOne.collisionWith == Type.WALL) snakeOne.removeFirst();
             if(snakeTwo.collisionWith == Type.WALL) snakeTwo.removeFirst();
@@ -392,10 +399,12 @@ $(document).ready(function(){
                 remainingTurns = 2;
             }
             else Game.scoreOne++;
+
             food.spawn();
             scorePlayerOne.html("Score: " + Game.scoreOne);
             Map.set(Type.FOOD, food.x, food.y);
             if(food.bonus) startTime = $.now();
+            if(Game.timeChallenge) timeStart = $.now();
         }
         else {
             if(remainingTurns == 0) snakeOne.removeLast();
@@ -409,16 +418,29 @@ $(document).ready(function(){
                     remainingTurns = 2;
                 }
                 else Game.scoreTwo++;
+
                 food.spawn();
                 scorePlayerTwo.html("Score: " + Game.scoreTwo);
                 Map.set(Type.FOOD, food.x, food.y);
                 if(food.bonus) startTime = $.now();
+                if(Game.timeChallenge) timeStart = $.now();
             }
             else {
                 if(remainingTurns == 0) snakeTwo.removeLast();
             }
         }
 
+        /* if the player wants time challenge */
+        if(Game.timeChallenge && !Game.multiplayer){
+            if($.now() - timeStart >= 5000){
+                Game.inProgress = false;
+                stopMusic();
+                showGameOverUI();
+                gameOverTextUI.html("You ran out of time!");
+            }
+        }
+
+        /* if bonus food appears */
         if(food.bonus && $.now() - previousTime >= 1000){
             if(doSoundEffects) tickSound.play();
             previousTime = $.now();
@@ -439,6 +461,12 @@ $(document).ready(function(){
             remainingTimeUI.show();
         }
         else remainingTimeUI.hide();
+
+        if(Game.timeChallenge) {
+            var time = Math.ceil(((timeStart + 5000) - $.now()) / 1000);
+            remainingTimeUI.html("00:0" + time);
+            remainingTimeUI.show();
+        }
 
         if(remainingTurns > 0) remainingTurns--;
     };

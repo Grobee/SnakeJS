@@ -27,6 +27,7 @@ var Game = {
         this.scoreTwo = 0;
         this.tie = false;
         this.winner = null;
+        this.timeChallenge = false;
         /* populate the keys array */
         for(var i = 37; i <= 40; i++)
             Game.keys[i] = false;

@@ -8,8 +8,10 @@ var Food = function(tileSize){
     this.spawn = function(){
         do{
             /* 8% chance of this food being a bonus food */
-            if(Math.random() <= 0.08) this.bonus = true;
-            else this.bonus = false;
+            if(!Game.timeChallenge){
+                if(Math.random() <= 0.08) this.bonus = true;
+                else this.bonus = false;
+            }
 
             this.x = Math.floor(Math.random() * (Map.rows - 1));
             this.y = Math.floor(Math.random() * (Map.columns - 1));
