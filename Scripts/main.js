@@ -2,7 +2,7 @@ $(document).ready(function(){
     /* initialize the game / game loop */
     var gameLoop;
     var canvas = $('#mainCanvas');
-    const fps = 65;
+    var fps = 65;
     const tileSize = 24;
     const width = 672;
     const height = 672;
@@ -242,6 +242,19 @@ $(document).ready(function(){
             songs[$('#music_select_id').val()].play();
             songs[$('#music_select_id').val()].loop = true;
             currentlyPlaying = songs[$('#music_select_id').val()];
+        }
+
+        /* game speed */
+        switch($('#game_speed_select').val()){
+            case "slow":
+                fps = 100;
+                break;
+            case "normal":
+                fps = 65;
+                break;
+            case "fast":
+                fps = 35;
+                break;
         }
 
         gameLoop = setTimeout(animate, fps);
