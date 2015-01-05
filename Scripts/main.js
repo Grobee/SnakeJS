@@ -38,6 +38,9 @@ $(document).ready(function(){
     var optionsBtn = $('#optionsBtn');
     var optionsBackBtn = $('#optionsBackBtn');
     var doSoundEffects;
+    /* progress bar */
+    var progressDiv = $('#progress_div');
+    var progressBar = $('#progress_div progress');
     /* choose game difficulty */
     var gameDiffUI = $('#choose_diff_id');
     var easyDiffBtnUI = $('#easy_btn');
@@ -75,8 +78,16 @@ $(document).ready(function(){
     twoPlayerUI.click(function() { Game.multiplayer = true; chooseMap(); });
 
     /* choose difficulty */
-    easyDiffBtnUI.click(function(){ initEasy(); });
-    hardDiffBtnUI.click(function(){ initHard(); });
+    easyDiffBtnUI.click(function(){
+        loadSnakeImages();
+        initEasy();
+    });
+
+    hardDiffBtnUI.click(function(){
+        loadSnakeImages();
+        initHard();
+    });
+
     goToMenuUI.click(function() { stopMusic(); setDefault(); });
 
     var stopMusic = function(){
@@ -94,13 +105,30 @@ $(document).ready(function(){
     });
 
     optionsBackBtn.click(function(){
-        menuUI.show();
-        optionsUI.hide();
+        initialState();
     });
 
     var chooseMap = function(){
         gameDiffUI.show();
         menuUI.hide();
+    };
+
+    var initialState = function(){
+        /* default visibility */
+        canvas.hide();
+        gameScoreUI.hide();
+        optionsUI.hide();
+        gameOverUI.hide();
+        gameDiffUI.hide();
+        progressDiv.hide();
+        menuUI.hide();
+        progressDiv.show();
+        /* default values */
+        canvas.attr('width', width);
+        canvas.attr('height', height);
+        /* load */
+        loadImages();
+        loadSongs();
     };
 
     var setDefault = function(){
@@ -112,18 +140,36 @@ $(document).ready(function(){
         optionsUI.hide();
         gameOverUI.hide();
         gameDiffUI.hide();
+        progressDiv.hide();
         menuUI.show();
+        progressDiv.hide();
         /* default values */
         canvas.attr('width', width);
         canvas.attr('height', height);
     };
 
+    var loadingProgress = function(){
+        var val = progressBar.val();
+        val += 20;
+        progressBar.val(val);
+
+        if(progressBar.val() >= 100) {
+            progressBar.val(0);
+            setDefault();
+        }
+    };
+
     var loadSongs = function(){
         songs[0] = new Audio("Music/ACDC - Highway To Hell.ogg");
+        songs[0].onload = loadingProgress;
         songs[1] = new Audio("Music/Creedence Clearwater Revival - Fortunate Son.ogg");
+        songs[1].onload = loadingProgress;
         songs[2] = new Audio("Music/Creedence Clearwater Revival - Have You Ever Seen The Rain.ogg");
+        songs[2].onload = loadingProgress;
         songs[3] = new Audio("Music/Guns N Roses - Paradise City.ogg");
+        songs[3].onload = loadingProgress;
         songs[4] = new Audio("Music/The Doors - Riders on the Storm.ogg");
+        songs[4].onload = loadingProgress;
     };
 
     var reloadSongs = function(){
@@ -134,10 +180,15 @@ $(document).ready(function(){
 
     var loadImages = function(){
         wallImg.src = "Images/wall.png";
+        wallImg.onload = loadingProgress;
         foodImg.src = "Images/food.png";
+        foodImg.onload = loadingProgress;
         bonusFoodImg.src = "Images/food_bonus.png";
+        bonusFoodImg.onload = loadingProgress;
         bgImg.src = "Images/bg.png";
+        bgImg.onload = loadingProgress;
         deadImg.src = "Images/dead.png";
+        deadImg.onload = loadingProgress;
     };
 
     var loadSnakeImages = function(){
@@ -185,7 +236,6 @@ $(document).ready(function(){
         /* sound effects */
         doSoundEffects = $('#sound_effect_checkbox').prop('checked');
         /* the rest */
-        loadSnakeImages();
         gameDiffUI.hide();
         /* game initEasy */
         Game.init(canvas, canvas.get(0).getContext('2d'));
@@ -264,7 +314,6 @@ $(document).ready(function(){
         /* sound effects */
         doSoundEffects = $('#sound_effect_checkbox').prop('checked');
         /* the rest */
-        loadSnakeImages();
         gameDiffUI.hide();
         /* game initEasy */
         Game.init(canvas, canvas.get(0).getContext('2d'));
@@ -553,7 +602,6 @@ $(document).ready(function(){
             }
         }
     };
-    loadSongs();
-    loadImages();
-    setDefault();
+
+    initialState();
 });

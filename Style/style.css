@@ -40,3 +40,6 @@ body { margin: 0 auto 0 auto; width: 1024px; background-color: cadetblue; overfl
 button { margin-left: 35%; padding: 5px; font-family: "Arcade Classic", sans-serif; cursor: pointer; }
 #easy_btn { margin-top: 29%; }
 #hard_btn { margin-top: 40%; }
+/* progress bar */
+#progress_div { width: 100%; height: 100%; position: inherit; background-color: #000; }
+#progress_div progress { position: inherit; top: 45%; left: 38%; }
