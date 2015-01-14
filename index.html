@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Snake</title>
     <link rel="stylesheet" href="Style/style.css" />
+    <link rel="shortcut icon" href="Images/snake_icon.png" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script type="text/javascript" src="Scripts/main.js"></script>
     <script type="text/javascript" src="Scripts/physics.js"></script>
@@ -36,61 +37,80 @@
 
             <div id="menuUI">
                 <div class="menuUIButtons">
-                    <div id="onePlayerUI">One Player</div>
-                    <div id="twoPlayerUI">Two Players</div>
-                    <div id="optionsBtn">Options</div>
-                    <div id="instructionsUI">Instructions</div>
-                    <div id="creditsUI">Credits</div>
+                    <div class="menuButton" id="onePlayerUI">One Player</div>
+                    <div class="menuButton" id="twoPlayerUI">Two Players</div>
+                    <div class="menuButton" id="optionsBtn">Options</div>
+                    <div class="menuButton" id="instructionsUI">Instructions</div>
+                    <div class="menuButton" id="creditsUI">Credits</div>
                 </div>
             </div>
 
             <div id="optionsUI">
-                <div class="menuUIButtons">Music</div>
                 <div id="musicUI" class="menuUIButtons">
-                    <select name="music_select" id="music_select_id" class="menuUIButtons">
-                        <option selected value="0">AC / DC - Highway to Hell</option>
-                        <option value="3">Guns N Roses - Paradise City</option>
-                        <option value="1">CCR - Fortunate Son</option>
-                        <option value="2">CCR - Have You Ever Seen the Rain</option>
-                        <option value="4">The Doors - Riders On the Storm</option>
-                        <option value="5">Off</option>
-                    </select>
+                    Music <br />
+
+                    <div>
+                        <select name="music_select" id="music_select_id" class="menuUIButtons">
+                            <option selected value="0">AC / DC - Highway to Hell</option>
+                            <option value="3">Guns N Roses - Paradise City</option>
+                            <option value="1">CCR - Fortunate Son</option>
+                            <option value="2">CCR - Have You Ever Seen the Rain</option>
+                            <option value="4">The Doors - Riders On the Storm</option>
+                            <option value="5">Off</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div id="sound_effect_option" class="menuUIButtons">
+                <div id="sound_effect_option" class="optionUIButtons">
                     Sound effects
                     <input type="checkbox" id="sound_effect_checkbox" value="sound_effect" checked />
                 </div>
 
-                <div id="timeChallengeUI" class="menuUIButtons">
+                <div id="timeChallengeUI" class="optionUIButtons">
                     <label for="timechallenge_check">Time Challenge</label>
                     <input id="timechallenge_check" type="checkbox" />
                 </div>
 
                 <div id="gameSpeedUI" class="menuUIButtons">
                     Game speed <br />
-                    <select id="game_speed_select" name="game_speed_select">
-                        <option value="slow">Slow</option>
-                        <option value="normal" selected>Normal</option>
-                        <option value="fast">Fast</option>
-                    </select>
+
+                    <div>
+                        <select id="game_speed_select" name="game_speed_select">
+                            <option value="slow">Slow</option>
+                            <option value="normal" selected>Normal</option>
+                            <option value="fast">Fast</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div id="optionsBackBtn" class="menuUIButtons"><span>Back</span></div>
-                <div id=""></div>
+                <div id="optionsBackBtn" class="optionUIButtons"><span>Back</span></div>
             </div>
 
             <div id="choose_diff_id">
                 <div class="difficulty" id="easy">
                     <img src="Images/easy.jpg" alt="easy" width="128" height="128" />
                     <p>This is for all you newbies. You will get a ton of points without any real effort.</p>
-                    <button id="easy_btn">CHOOSE THIS</button>
                 </div>
                 <div class="difficulty" id="hard">
                     <img src="Images/hard.png" width="128" height="128" />
                     <p>Oh so you want some challenge? Here you go!</p>
-                    <button id="hard_btn">CHOOSE THIS</button>
                 </div>
+
+                <div id="difficultyBackBtn" class="optionUIButtons"><span>Back</span></div>
+            </div>
+
+            <div id="credits_ui_diff">
+                <div id="creditsText">
+                    <span>Coder </span>
+                    Róbert Gulyás <br />
+                    <span>Institute<br /></span>
+                    Polytechnical College of Subotica <br /><br />
+                    <span>Version </span>
+                    20150114v1
+                </div>
+
+                <div id="creditsBackBtn" class="optionUIButtons"><span>Back</span></div>
+
             </div>
         </div>
     </div>

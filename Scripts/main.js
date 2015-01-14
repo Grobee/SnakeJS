@@ -17,7 +17,6 @@ $(document).ready(function(){
     var previousTime = 0;
     /* time handling for time challenge */
     var timeStart;
-    var previousTimeStart;
     /* UI elements */
     /* game scoreOne */
     var gameScoreUI = $('#gameScoreUI');
@@ -43,8 +42,9 @@ $(document).ready(function(){
     var progressBar = $('#progress_div progress');
     /* choose game difficulty */
     var gameDiffUI = $('#choose_diff_id');
-    var easyDiffBtnUI = $('#easy_btn');
-    var hardDiffBtnUI = $('#hard_btn');
+    var easyBtn = $('#easy');
+    var hardBtn = $('#hard');
+    var diffBackBtn = $('#difficultyBackBtn');
     /* images */
     var foodImg = new Image();
     var bonusFoodImg = new Image();
@@ -58,6 +58,10 @@ $(document).ready(function(){
     var eatingSound = new Audio('Sound/eat.ogg');
     var hitSound = new Audio('Sound/hit.ogg');
     var tickSound = new Audio('Sound/tick.ogg');
+    /* credits */
+    var creditsUIBtn = $("#creditsUI");
+    var creditsUI = $('#credits_ui_diff');
+    var creditsBackBtn = $('#creditsBackBtn');
 
     $(document).keydown(function(event){ Game.keys[event.which] = true; });
 
@@ -78,12 +82,12 @@ $(document).ready(function(){
     twoPlayerUI.click(function() { Game.multiplayer = true; chooseMap(); });
 
     /* choose difficulty */
-    easyDiffBtnUI.click(function(){
+    easyBtn.click(function(){
         loadSnakeImages();
         initEasy();
     });
 
-    hardDiffBtnUI.click(function(){
+    hardBtn.click(function(){
         loadSnakeImages();
         initHard();
     });
@@ -102,9 +106,10 @@ $(document).ready(function(){
     optionsBtn.click(function(){
         optionsUI.show();
         menuUI.hide();
+        creditsUI.hide();
     });
 
-    optionsBackBtn.click(function(){
+    var goBack = function(){
         canvas.hide();
         gameScoreUI.hide();
         optionsUI.hide();
@@ -113,11 +118,29 @@ $(document).ready(function(){
         progressDiv.hide();
         menuUI.show();
         progressDiv.hide();
+        creditsUI.hide();
+    };
+
+    optionsBackBtn.click(goBack);
+    diffBackBtn.click(goBack);
+    creditsBackBtn.click(goBack);
+
+    creditsUIBtn.click(function(){
+        canvas.hide();
+        gameScoreUI.hide();
+        optionsUI.hide();
+        gameOverUI.hide();
+        gameDiffUI.hide();
+        progressDiv.hide();
+        menuUI.hide();
+        progressDiv.hide();
+        creditsUI.show();
     });
 
     var chooseMap = function(){
         gameDiffUI.show();
         menuUI.hide();
+        creditsUI.hide();
     };
 
     var initialState = function(){
@@ -130,6 +153,7 @@ $(document).ready(function(){
         progressDiv.hide();
         menuUI.hide();
         progressDiv.show();
+        creditsUI.hide();
         /* default values */
         canvas.attr('width', width);
         canvas.attr('height', height);
@@ -150,6 +174,7 @@ $(document).ready(function(){
         progressDiv.hide();
         menuUI.show();
         progressDiv.hide();
+        creditsUI.hide();
         /* default values */
         canvas.attr('width', width);
         canvas.attr('height', height);
@@ -506,6 +531,20 @@ $(document).ready(function(){
                 stopMusic();
                 showGameOverUI();
                 gameOverTextUI.html("You ran out of time!");
+            }
+        }
+
+        if(Game.timeChallenge && Game.multiplayer){
+            if($.now() - timeStart >= 5000){
+                Game.inProgress = false;
+                stopMusic();
+                showGameOverUI();
+
+                if(Game.scoreOne > Game.scoreTwo) Game.winner = Game.winner = "<span style='font-size: 0.6em;'>The winner is</span><br /><p style='font-size: 1.1em; color: green;'>Player1</p>";
+                else if(Game.scoreOne < Game.scoreTwo) Game.winner = "<span style='font-size: 0.6em;'>The winner is</span><br /><p  style='font-size: 1.1em; color: orange;'>Player2</p>";
+                else Game.winner = "<span style='font-size: 0.6em;'>There is no winner</span><br /><p style='font-size: 1.1em; color: darkred;'>TIE</p>";
+
+                gameOverTextUI.html(Game.winner);
             }
         }
 
