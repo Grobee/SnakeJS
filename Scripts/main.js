@@ -105,7 +105,14 @@ $(document).ready(function(){
     });
 
     optionsBackBtn.click(function(){
-        initialState();
+        canvas.hide();
+        gameScoreUI.hide();
+        optionsUI.hide();
+        gameOverUI.hide();
+        gameDiffUI.hide();
+        progressDiv.hide();
+        menuUI.show();
+        progressDiv.hide();
     });
 
     var chooseMap = function(){
