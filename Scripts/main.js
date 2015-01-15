@@ -4,8 +4,8 @@ $(document).ready(function(){
     var canvas = $('#mainCanvas');
     var fps = 65;
     const tileSize = 24;
-    const width = 672;
-    const height = 672;
+    var width;
+    var height;
     /* game objects */
     var snakeOne;
     var snakeTwo;
@@ -145,6 +145,8 @@ $(document).ready(function(){
 
     var initialState = function(){
         /* default visibility */
+        width = canvas.width();
+        height = canvas.height();
         canvas.hide();
         gameScoreUI.hide();
         optionsUI.hide();
@@ -154,9 +156,6 @@ $(document).ready(function(){
         menuUI.hide();
         progressDiv.show();
         creditsUI.hide();
-        /* default values */
-        canvas.attr('width', width);
-        canvas.attr('height', height);
         /* load */
         loadImages();
         loadSongs();
@@ -282,7 +281,7 @@ $(document).ready(function(){
         Map.init(tileSize);
 
         /* Snake #1 */
-        var index = { x: Math.floor(Map.rows - 5), y: Math.floor(Map.columns - 3) };
+        var index = { x: Math.floor(Map.rows - 4), y: Math.floor(Map.columns - 3) };
         for(var i = 0; i < 3; i++) {
             snakeOne.add(index.x, index.y - i);
             Map.set(Type.SNAKE, index.x, index.y - i);
@@ -290,7 +289,7 @@ $(document).ready(function(){
 
         /* Snake #2 */
         if(Game.multiplayer){
-            var index = { x: 4, y: 4 };
+            var index = { x: 3, y: 3 };
             for(var i = 0; i < 3; i++) {
                 snakeTwo.add(index.x, index.y + i);
                 Map.set(Type.ENEMY, index.x, index.y + i);
@@ -358,7 +357,7 @@ $(document).ready(function(){
         Map.init(tileSize);
 
         /* init Snake */
-        var index = { x: Math.floor(Map.rows - 3), y: Math.floor(Map.columns - 3) };
+        var index = { x: Math.floor(Map.rows - 2), y: Math.floor(Map.columns - 3) };
         for(var i = 0; i < 3; i++) {
             snakeOne.add(index.x, index.y - i);
             Map.set(Type.SNAKE, index.x, index.y - i);
@@ -366,7 +365,7 @@ $(document).ready(function(){
 
         /* Snake #2 */
         if(Game.multiplayer){
-            var index = { x: 2, y: 3 };
+            var index = { x: 1, y: 2 };
             for(var i = 0; i < 3; i++) {
                 snakeTwo.add(index.x, index.y + i);
                 Map.set(Type.ENEMY, index.x, index.y + i);
